@@ -27,7 +27,7 @@ export class Yellow extends TimedState {
 }
 
 export class Red extends TimedState {
-    next = () => Green;
+    next = Green;
     duration = 30;
 }
 
