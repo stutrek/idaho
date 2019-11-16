@@ -1,22 +1,30 @@
 import { State, IState } from './State';
 import { EventEmitter } from 'events';
 
-interface Events<StatesT> {
-    transition: Machine<StatesT>;
-    'child-transition': Machine<StatesT>;
+interface Events<MachineT> {
+    transition: MachineT;
+    'child-transition': MachineT;
+    'data-change': MachineT;
 }
 
-export class Machine<StatesT> {
-    constructor(public State?: IState<any, any>, public parent?: Machine<any>) {
+export class Machine<
+    StatesT extends State<Machine<StatesT, ParentT, MachineDataT>>,
+    ParentT extends Machine<any> = undefined,
+    MachineDataT = {}
+> {
+    constructor(
+        public State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>,
+        public parent?: ParentT
+    ) {
         const emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);
         this.off = emitter.off.bind(emitter);
         this.emit = emitter.emit.bind(emitter);
 
         // @ts-ignore
-        if (State === undefined && this.constructor.initialState !== undefined) {
+        if (State === undefined && this.initialState !== undefined) {
             // @ts-ignore
-            this.transition(this.constructor.initialState);
+            this.transition(this.initialState);
         } else if (State !== undefined) {
             this.transition(State);
         } else {
@@ -24,30 +32,54 @@ export class Machine<StatesT> {
         }
     }
 
-    histories = new Map<IState<any, any>, State<any, any>>();
+    initialState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>> | undefined;
 
-    effectClearers: (Function | undefined)[] = [];
+    histories = new Map<IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, StatesT>();
 
-    static initialState?: IState<any, any>;
-    current: State<any, any>;
+    effectClearers: (() => void)[] = [];
 
-    on: <K extends keyof Events<StatesT>>(eventName: K, state: StatesT) => void;
-    off: <K extends keyof Events<StatesT>>(eventName: K, state: StatesT) => void;
-    private emit: <K extends keyof Events<StatesT>>(eventName: K, state: StatesT) => void;
+    current: StatesT;
 
-    transition(NextState: IState<any, any>) {
+    on: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+        eventName: K,
+        state: StatesT | MachineDataT
+    ) => void;
+    off: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+        eventName: K,
+        state: StatesT | MachineDataT
+    ) => void;
+    private emit: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+        eventName: K,
+        state: StatesT | MachineDataT
+    ) => void;
+
+    data: MachineDataT | undefined;
+
+    private nextData: Partial<MachineDataT> | undefined;
+    setData(newData: Partial<MachineDataT>) {
+        this.data = {
+            ...this.data,
+            ...newData,
+        };
+        this.emit('data-change', this.data!);
+    }
+
+    transition(NextState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>) {
         for (const clearer of this.effectClearers) {
             if (clearer) {
                 clearer();
             }
         }
         if (this.histories.has(NextState)) {
-            this.current = this.histories.get(NextState);
+            const history = this.histories.get(NextState);
+            this.current = history;
         } else {
             this.current = new NextState(this);
         }
+
         if (this.current.effects) {
-            this.effectClearers = this.current.effects.map(effect => effect());
+            // @ts-ignore
+            this.effectClearers = this.current.effects.map(effect => effect(this));
         } else {
             this.effectClearers = [];
         }
@@ -59,7 +91,7 @@ export class Machine<StatesT> {
         }
     }
 
-    receiveChildTransition(machine: Machine<any>) {
+    receiveChildTransition(machine: Machine<any, any>) {
         // @ts-ignore
         this.emit('child-transition', machine);
         if (this.parent) {

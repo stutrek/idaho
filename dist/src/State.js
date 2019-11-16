@@ -9,26 +9,42 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { EventEmitter } from 'events';
-var State = (function () {
-    function State(machine) {
-        this.machine = machine;
-        var emitter = new EventEmitter();
-        this.on = emitter.on.bind(emitter);
-        this.off = emitter.off.bind(emitter);
-        this.emit = emitter.emit.bind(emitter);
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    State.prototype.setData = function (newData) {
-        var _this = this;
-        this.data = __assign(__assign({}, this.data), newData);
-        if (this.dataUpdatePromise === undefined) {
-            this.dataUpdatePromise = Promise.resolve().then(function () {
-                _this.dataUpdatePromise = undefined;
-                _this.emit('change', _this.data);
-            });
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "events"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    exports.__esModule = true;
+    var events_1 = require("events");
+    var State = (function () {
+        function State(machine) {
+            this.machine = machine;
+            var emitter = new events_1.EventEmitter();
+            this.on = emitter.on.bind(emitter);
+            this.off = emitter.off.bind(emitter);
+            this.emit = emitter.emit.bind(emitter);
         }
-    };
-    return State;
-}());
-export { State };
+        State.prototype.setData = function (newData) {
+            var _this = this;
+            if (!this.nextData) {
+                this.nextData = newData;
+                Promise.resolve().then(function () {
+                    _this.data = __assign(__assign({}, _this.data), _this.nextData);
+                    _this.nextData = undefined;
+                    _this.emit('change', _this.data);
+                });
+            }
+            else {
+                this.nextData = __assign(__assign({}, this.nextData), newData);
+            }
+        };
+        return State;
+    }());
+    exports.State = State;
+});
 //# sourceMappingURL=State.js.map

@@ -2,16 +2,17 @@ import { EventEmitter } from 'events';
 
 import { Machine } from './Machine';
 
-export interface IState<StateDataT, MachineT> {
-    new (machine: MachineT): State<StateDataT, MachineT>;
+export interface IState<State, MachineT> {
+    new <MachineT>(machine: MachineT): State;
 }
 
 interface Events<StateDataT, MachineT> {
+    // @ts-ignore
     change: State<StateDataT, MachineT>;
 }
 
-export class State<StateDataT, MachineT> {
-    constructor(private machine: Machine<State<StateDataT, MachineT>>) {
+export class State<MachineT extends Machine<any, any, any>, StateDataT = undefined> {
+    constructor(public machine: MachineT) {
         const emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);
         this.off = emitter.off.bind(emitter);
@@ -19,9 +20,8 @@ export class State<StateDataT, MachineT> {
     }
 
     data: StateDataT | undefined;
-    effects: (() => Function | undefined)[] | undefined;
-
-    private dataUpdatePromise: Promise<void> | undefined;
+    private nextData: Partial<StateDataT> | undefined;
+    effects: Array<(machine: MachineT) => () => void | void> | undefined;
 
     on: <K extends keyof Events<StateDataT, MachineT>>(eventName: K, data: StateDataT) => void;
     off: <K extends keyof Events<StateDataT, MachineT>>(eventName: K, data: StateDataT) => void;
@@ -31,15 +31,21 @@ export class State<StateDataT, MachineT> {
     ) => void;
 
     setData(newData: Partial<StateDataT>) {
-        this.data = {
-            ...this.data,
-            ...newData,
-        };
-        if (this.dataUpdatePromise === undefined) {
-            this.dataUpdatePromise = Promise.resolve().then(() => {
-                this.dataUpdatePromise = undefined;
+        if (!this.nextData) {
+            this.nextData = newData;
+            Promise.resolve().then(() => {
+                this.data = {
+                    ...this.data,
+                    ...this.nextData,
+                };
+                this.nextData = undefined;
                 this.emit('change', this.data);
             });
+        } else {
+            this.nextData = {
+                ...this.nextData,
+                ...newData,
+            };
         }
     }
 }

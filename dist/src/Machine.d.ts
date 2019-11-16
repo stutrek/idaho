@@ -1,20 +1,24 @@
 import { State, IState } from './State';
-interface Events<StatesT> {
-    transition: Machine<StatesT>;
-    'child-transition': Machine<StatesT>;
+interface Events<MachineT> {
+    transition: MachineT;
+    'child-transition': MachineT;
+    'data-change': MachineT;
 }
-export declare class Machine<StatesT> {
-    State?: IState<any, any>;
-    parent?: Machine<any>;
-    constructor(State?: IState<any, any>, parent?: Machine<any>);
-    histories: Map<IState<any, any>, State<any, any>>;
-    effectClearers: (Function | undefined)[];
-    static initialState?: IState<any, any>;
-    current: State<any, any>;
-    on: <K extends keyof Events<StatesT>>(eventName: K, state: StatesT) => void;
-    off: <K extends keyof Events<StatesT>>(eventName: K, state: StatesT) => void;
+export declare class Machine<StatesT extends State<Machine<StatesT, ParentT, MachineDataT>>, ParentT extends Machine<any> = undefined, MachineDataT = {}> {
+    State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>;
+    parent?: ParentT;
+    constructor(State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, parent?: ParentT);
+    initialState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>> | undefined;
+    histories: Map<IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, StatesT>;
+    effectClearers: (() => void)[];
+    current: StatesT;
+    on: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(eventName: K, state: StatesT | MachineDataT) => void;
+    off: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(eventName: K, state: StatesT | MachineDataT) => void;
     private emit;
-    transition(NextState: IState<any, any>): void;
-    receiveChildTransition(machine: Machine<any>): void;
+    data: MachineDataT | undefined;
+    private nextData;
+    setData(newData: Partial<MachineDataT>): void;
+    transition(NextState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>): void;
+    receiveChildTransition(machine: Machine<any, any>): void;
 }
 export {};

@@ -2390,6 +2390,9 @@ img {
 					<a href="machine.html#current" class="tsd-kind-icon">current</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="machine.html#data" class="tsd-kind-icon">data</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="machine.html#effectclearers" class="tsd-kind-icon">effect<wbr>Clearers</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
@@ -2397,6 +2400,12 @@ img {
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="machine.html#histories" class="tsd-kind-icon">histories</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="machine.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="machine.html#nextdata" class="tsd-kind-icon">next<wbr>Data</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="machine.html#off" class="tsd-kind-icon">off</a>
@@ -2407,11 +2416,11 @@ img {
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="machine.html#parent" class="tsd-kind-icon">parent</a>
 				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
-					<a href="machine.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a>
-				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="machine.html#receivechildtransition" class="tsd-kind-icon">receive<wbr>Child<wbr>Transition</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="machine.html#setdata" class="tsd-kind-icon">set<wbr>Data</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="machine.html#transition" class="tsd-kind-icon">transition</a>
@@ -2435,7 +2444,13 @@ img {
 			<h3>Type parameters</h3>
 			<ul class="tsd-type-parameters">
 				<li>
-					<h4>StatesT</h4>
+					<h4>StatesT<span class="tsd-signature-symbol">: </span><a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+				</li>
+				<li>
+					<h4>ParentT<span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+				</li>
+				<li>
+					<h4>MachineDataT</h4>
 				</li>
 			</ul>
 		</section>
@@ -2462,19 +2477,22 @@ img {
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#state" class="tsd-kind-icon">State</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#current" class="tsd-kind-icon">current</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#data" class="tsd-kind-icon">data</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#effectclearers" class="tsd-kind-icon">effect<wbr>Clearers</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="machine.html#emit" class="tsd-kind-icon">emit</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#histories" class="tsd-kind-icon">histories</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="machine.html#nextdata" class="tsd-kind-icon">next<wbr>Data</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#off" class="tsd-kind-icon">off</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#on" class="tsd-kind-icon">on</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="machine.html#parent" class="tsd-kind-icon">parent</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="machine.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="machine.html#receivechildtransition" class="tsd-kind-icon">receive<wbr>Child<wbr>Transition</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="machine.html#setdata" class="tsd-kind-icon">set<wbr>Data</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="machine.html#transition" class="tsd-kind-icon">transition</a></li>
 						</ul>
 					</section>
@@ -2487,22 +2505,22 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Machine<span class="tsd-signature-symbol">(</span>State<span class="tsd-signature-symbol">?: </span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">?: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Machine<span class="tsd-signature-symbol">(</span>State<span class="tsd-signature-symbol">?: </span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in Machine.ts:9</li>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L14">Machine.ts:14</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> State: <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> State: <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <span class="tsd-signature-type">ParentT</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="machine.html" class="tsd-signature-type">Machine</a></h4>
@@ -2515,30 +2533,40 @@ img {
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="state" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> State</h3>
-				<div class="tsd-signature tsd-kind-icon">State<span class="tsd-signature-symbol">:</span> <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">State<span class="tsd-signature-symbol">:</span> <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:10</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L16">Machine.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="current" class="tsd-anchor"></a>
 				<h3>current</h3>
-				<div class="tsd-signature tsd-kind-icon">current<span class="tsd-signature-symbol">:</span> <a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">current<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">StatesT</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:32</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L41">Machine.ts:41</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="data" class="tsd-anchor"></a>
+				<h3>data</h3>
+				<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L56">Machine.ts:56</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="effectclearers" class="tsd-anchor"></a>
 				<h3>effect<wbr>Clearers</h3>
-				<div class="tsd-signature tsd-kind-icon">effect<wbr>Clearers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+				<div class="tsd-signature tsd-kind-icon">effect<wbr>Clearers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:29</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L39">Machine.ts:39</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2548,7 +2576,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">emit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:36</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L51">Machine.ts:51</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2556,14 +2584,14 @@ img {
 					<ul class="tsd-parameters">
 						<li class="tsd-parameter-siganture">
 							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-has-type-parameter tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 							</ul>
 							<ul class="tsd-descriptions">
 								<li class="tsd-description">
 									<h4 class="tsd-type-parameters-title">Type parameters</h4>
 									<ul class="tsd-type-parameters">
 										<li>
-											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;StatesT&gt;</span></h4>
+											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;Machine&lt;StatesT, ParentT, MachineDataT&gt;&gt;</span></h4>
 										</li>
 									</ul>
 									<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2572,7 +2600,7 @@ img {
 											<h5>eventName: <span class="tsd-signature-type">K</span></h5>
 										</li>
 										<li>
-											<h5>state: <span class="tsd-signature-type">StatesT</span></h5>
+											<h5>state: <span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span></h5>
 										</li>
 									</ul>
 									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2585,10 +2613,30 @@ img {
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="histories" class="tsd-anchor"></a>
 				<h3>histories</h3>
-				<div class="tsd-signature tsd-kind-icon">histories<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Map&lt;IState&lt;any, any&gt;, State&lt;any, any&gt;&gt;()</span></div>
+				<div class="tsd-signature tsd-kind-icon">histories<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Map&lt;IState&lt;StatesT, Machine&lt;StatesT, ParentT, MachineDataT&gt;&gt;, StatesT&gt;()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:27</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L37">Machine.ts:37</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="initialstate" class="tsd-anchor"></a>
+				<h3>initial<wbr>State</h3>
+				<div class="tsd-signature tsd-kind-icon">initial<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L35">Machine.ts:35</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="nextdata" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> next<wbr>Data</h3>
+				<div class="tsd-signature tsd-kind-icon">next<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L58">Machine.ts:58</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2598,7 +2646,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:35</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L47">Machine.ts:47</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2606,14 +2654,14 @@ img {
 					<ul class="tsd-parameters">
 						<li class="tsd-parameter-siganture">
 							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-has-type-parameter tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 							</ul>
 							<ul class="tsd-descriptions">
 								<li class="tsd-description">
 									<h4 class="tsd-type-parameters-title">Type parameters</h4>
 									<ul class="tsd-type-parameters">
 										<li>
-											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;StatesT&gt;</span></h4>
+											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;Machine&lt;StatesT, ParentT, MachineDataT&gt;&gt;</span></h4>
 										</li>
 									</ul>
 									<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2622,7 +2670,7 @@ img {
 											<h5>eventName: <span class="tsd-signature-type">K</span></h5>
 										</li>
 										<li>
-											<h5>state: <span class="tsd-signature-type">StatesT</span></h5>
+											<h5>state: <span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span></h5>
 										</li>
 									</ul>
 									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2638,7 +2686,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:34</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L43">Machine.ts:43</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2646,14 +2694,14 @@ img {
 					<ul class="tsd-parameters">
 						<li class="tsd-parameter-siganture">
 							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-has-type-parameter tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								<li class="tsd-signature tsd-kind-icon">&lt;K&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, state<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 							</ul>
 							<ul class="tsd-descriptions">
 								<li class="tsd-description">
 									<h4 class="tsd-type-parameters-title">Type parameters</h4>
 									<ul class="tsd-type-parameters">
 										<li>
-											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;StatesT&gt;</span></h4>
+											<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof Events&lt;Machine&lt;StatesT, ParentT, MachineDataT&gt;&gt;</span></h4>
 										</li>
 									</ul>
 									<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2662,7 +2710,7 @@ img {
 											<h5>eventName: <span class="tsd-signature-type">K</span></h5>
 										</li>
 										<li>
-											<h5>state: <span class="tsd-signature-type">StatesT</span></h5>
+											<h5>state: <span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MachineDataT</span></h5>
 										</li>
 									</ul>
 									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2675,20 +2723,10 @@ img {
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="parent" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> parent</h3>
-				<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ParentT</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in Machine.ts:10</li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
-				<a name="initialstate" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> initial<wbr>State</h3>
-				<div class="tsd-signature tsd-kind-icon">initial<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in Machine.ts:31</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L17">Machine.ts:17</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2699,19 +2737,42 @@ img {
 				<a name="receivechildtransition" class="tsd-anchor"></a>
 				<h3>receive<wbr>Child<wbr>Transition</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">receive<wbr>Child<wbr>Transition<span class="tsd-signature-symbol">(</span>machine<span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">receive<wbr>Child<wbr>Transition<span class="tsd-signature-symbol">(</span>machine<span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in Machine.ts:62</li>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L94">Machine.ts:94</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>machine: <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>machine: <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="setdata" class="tsd-anchor"></a>
+				<h3>set<wbr>Data</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Data<span class="tsd-signature-symbol">(</span>newData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L59">Machine.ts:59</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>newData: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2722,19 +2783,19 @@ img {
 				<a name="transition" class="tsd-anchor"></a>
 				<h3>transition</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">transition<span class="tsd-signature-symbol">(</span>NextState<span class="tsd-signature-symbol">: </span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">transition<span class="tsd-signature-symbol">(</span>NextState<span class="tsd-signature-symbol">: </span><a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in Machine.ts:38</li>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/Machine.ts#L67">Machine.ts:67</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>NextState: <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>NextState: <a href="../interfaces/istate.html" class="tsd-signature-type">IState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StatesT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ParentT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

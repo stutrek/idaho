@@ -2389,17 +2389,17 @@ img {
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="state.html#data" class="tsd-kind-icon">data</a>
 				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a href="state.html#dataupdatepromise" class="tsd-kind-icon">data<wbr>Update<wbr>Promise</a>
-				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="state.html#effects" class="tsd-kind-icon">effects</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="state.html#emit" class="tsd-kind-icon">emit</a>
 				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="state.html#machine" class="tsd-kind-icon">machine</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="state.html#nextdata" class="tsd-kind-icon">next<wbr>Data</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="state.html#off" class="tsd-kind-icon">off</a>
@@ -2426,10 +2426,10 @@ img {
 			<h3>Type parameters</h3>
 			<ul class="tsd-type-parameters">
 				<li>
-					<h4>StateDataT</h4>
+					<h4>MachineT<span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 				</li>
 				<li>
-					<h4>MachineT</h4>
+					<h4>StateDataT</h4>
 				</li>
 			</ul>
 		</section>
@@ -2455,10 +2455,10 @@ img {
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="state.html#data" class="tsd-kind-icon">data</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="state.html#dataupdatepromise" class="tsd-kind-icon">data<wbr>Update<wbr>Promise</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="state.html#effects" class="tsd-kind-icon">effects</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="state.html#emit" class="tsd-kind-icon">emit</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="state.html#machine" class="tsd-kind-icon">machine</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="state.html#machine" class="tsd-kind-icon">machine</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="state.html#nextdata" class="tsd-kind-icon">next<wbr>Data</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="state.html#off" class="tsd-kind-icon">off</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="state.html#on" class="tsd-kind-icon">on</a></li>
 						</ul>
@@ -2478,19 +2478,19 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>State<span class="tsd-signature-symbol">(</span>machine<span class="tsd-signature-symbol">: </span><a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StateDataT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="state.html" class="tsd-signature-type">State</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>State<span class="tsd-signature-symbol">(</span>machine<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MachineT</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="state.html" class="tsd-signature-type">State</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in State.ts:13</li>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L14">State.ts:14</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>machine: <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StateDataT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>machine: <span class="tsd-signature-type">MachineT</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="state.html" class="tsd-signature-type">State</a></h4>
@@ -2506,27 +2506,17 @@ img {
 				<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">StateDataT</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:21</li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-				<a name="dataupdatepromise" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagPrivate">Private</span> data<wbr>Update<wbr>Promise</h3>
-				<div class="tsd-signature tsd-kind-icon">data<wbr>Update<wbr>Promise<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in State.ts:24</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L22">State.ts:22</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="effects" class="tsd-anchor"></a>
 				<h3>effects</h3>
-				<div class="tsd-signature tsd-kind-icon">effects<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+				<div class="tsd-signature tsd-kind-icon">effects<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:22</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L24">State.ts:24</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2536,7 +2526,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">emit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:28</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L28">State.ts:28</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2570,13 +2560,23 @@ img {
 					</ul>
 				</div>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="machine" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagPrivate">Private</span> machine</h3>
-				<div class="tsd-signature tsd-kind-icon">machine<span class="tsd-signature-symbol">:</span> <a href="machine.html" class="tsd-signature-type">Machine</a><span class="tsd-signature-symbol">&lt;</span><a href="state.html" class="tsd-signature-type">State</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StateDataT</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">MachineT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<h3>machine</h3>
+				<div class="tsd-signature tsd-kind-icon">machine<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MachineT</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:14</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L15">State.ts:15</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="nextdata" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> next<wbr>Data</h3>
+				<div class="tsd-signature tsd-kind-icon">next<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">StateDataT</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L23">State.ts:23</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2586,7 +2586,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:27</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L27">State.ts:27</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2626,7 +2626,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in State.ts:26</li>
+						<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L26">State.ts:26</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -2673,7 +2673,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in State.ts:33</li>
+								<li>Defined in <a href="https://github.com/stutrek/idaho/blob/7e75ab9/src/State.ts#L33">State.ts:33</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

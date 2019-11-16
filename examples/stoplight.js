@@ -1,4 +1,4 @@
-const { State, Machine } = require('../dist/idaho.umd.js');
+const { State, Machine } = require('../dist/index.js');
 
 // a standard street light
 const Green = (exports.Green = class Green extends State {
