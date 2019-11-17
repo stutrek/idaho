@@ -9,4 +9,10 @@ class Closed extends State {}
 
 type StoreStates = Open | Closed;
 
+export type StoreData = {
+    uncutPotatoes: number;
+    cutPotatoes: number;
+    fryer: Fryer;
+};
+
 export default class Store extends Machine<StoreStates> {}

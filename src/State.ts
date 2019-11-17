@@ -6,12 +6,15 @@ export interface IState<State, MachineT> {
     new <MachineT>(machine: MachineT): State;
 }
 
-interface Events<StateDataT, MachineT> {
-    // @ts-ignore
-    change: State<StateDataT, MachineT>;
+interface Events<StateDataT, MachineT extends Machine<any, any, any>> {
+    change: State<MachineT, StateDataT>;
 }
 
-export class State<MachineT extends Machine<any, any, any>, StateDataT = undefined> {
+export class State<
+    // @ts-ignore
+    MachineT extends Machine<State<MachineT, StateDataT>, any, any>,
+    StateDataT = undefined
+> {
     constructor(public machine: MachineT) {
         const emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);

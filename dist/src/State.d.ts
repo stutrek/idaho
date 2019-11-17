@@ -2,10 +2,10 @@ import { Machine } from './Machine';
 export interface IState<State, MachineT> {
     new <MachineT>(machine: MachineT): State;
 }
-interface Events<StateDataT, MachineT> {
-    change: State<StateDataT, MachineT>;
+interface Events<StateDataT, MachineT extends Machine<any, any, any>> {
+    change: State<MachineT, StateDataT>;
 }
-export declare class State<MachineT extends Machine<any, any, any>, StateDataT = undefined> {
+export declare class State<MachineT extends Machine<State<MachineT, StateDataT>, any, any>, StateDataT = undefined> {
     machine: MachineT;
     constructor(machine: MachineT);
     data: StateDataT | undefined;

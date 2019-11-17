@@ -106,4 +106,7 @@ export default class Fryer extends Machine<FryerStates, { potatoes: number }> {
     data = {
         potatoes: 0,
     };
+
+    turnOn: () => {};
+    turnOff: () => {};
 }
