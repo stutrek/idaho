@@ -1,5 +1,5 @@
-export declare const useState: <T>(defaultValue: T) => [T, (newValue: T) => void];
-export declare const useEffect: (effect: () => () => {}, guards: any[]) => void;
+import { MachineHooksState } from './hooks';
+export { useState, useEffect, useMemo, useHistory } from './hooks';
 interface Current<StatesMapT> {
     name: keyof StatesMapT;
     data: any;
@@ -17,6 +17,7 @@ export declare class HookMachine<StatesMapT, MachineDataT> {
         name: keyof StatesMapT;
         data: any;
     };
+    histories: Map<keyof StatesMapT, MachineHooksState>;
     on: <K extends keyof Events<StatesMapT>>(eventName: K, callback: (event: Current<StatesMapT>) => void) => void;
     off: <K extends keyof Events<StatesMapT>>(eventName: K, callback: (event: Current<StatesMapT>) => void) => void;
     private emit;
@@ -24,4 +25,3 @@ export declare class HookMachine<StatesMapT, MachineDataT> {
     transition: (nextState?: keyof StatesMapT) => void;
     private hooksState;
 }
-export {};

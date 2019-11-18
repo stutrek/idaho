@@ -7,14 +7,6 @@ import Fryer from './Fryer';
 
 type EmployeeStates = 'offDuty' | 'idle' | 'gettingPotatoes' | 'cuttingPotatoes' | 'managingFryer';
 
-// interface State {
-//     <StatesListT, StateDataT, MachineDataT>(
-//         transition: (state: StatesListT) => void,
-//         machineData: MachineDataT,
-//         setMachineData: (updatedData: Partial<MachineDataT>) => void
-//     ): StateDataT;
-// }
-
 type State<StatesListT, StateDataT, MachineDataT> = (
     transition: (state: StatesListT) => void,
     machineData: MachineDataT,
@@ -133,4 +125,8 @@ const states = {
     managingFryer: ManagingFryer,
 };
 
-export default class Employee extends Machine<EmployeeStates, MachineDataT> {}
+const createEmployee = () => {
+    return new HookMachine(states);
+};
+
+// export default class Employee extends Machine<EmployeeStates, MachineDataT> {}
