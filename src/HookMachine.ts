@@ -18,6 +18,10 @@ interface Events<StatesMapT> {
     datachange: Current<StatesMapT>;
 }
 
+export class Guard {
+    constructor(public nextState: string) {}
+}
+
 export class HookMachine<StatesMapT, MachineDataT> {
     constructor(
         public states: StatesMapT,
@@ -86,7 +90,15 @@ export class HookMachine<StatesMapT, MachineDataT> {
             }
         }
 
-        const updated = this.runState(nextState);
+        let updated;
+        try {
+            updated = this.runState(nextState);
+        } catch (e) {
+            if (e instanceof Guard && e.nextState in this.states) {
+                this.transition(e.nextState as keyof StatesMapT);
+                return;
+            }
+        }
 
         const stateChanged = nextState !== this.current.name;
         const dataChanged = shallowCompare(updated, this.current.data) === false;

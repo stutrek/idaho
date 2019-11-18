@@ -1,7 +1,7 @@
-import { HookMachine, useEffect } from '../../../../src/HookMachine';
+import { HookMachine, useEffect, Guard } from '../../../../src/HookMachine';
 // import Fryer from './Fryer';
 
-import { StoreData } from './Store';
+import { StoreData } from './Restaurant';
 // import { Machine } from '../../../../src/Machine';
 import Fryer from './Fryer';
 
@@ -16,6 +16,7 @@ type State<StatesListT, StateDataT, MachineDataT> = (
 type ClockedOutState = State<EmployeeStates, { clockIn: Function }, {}>;
 
 type ClockedInState = State<EmployeeStates, { clockOut: () => void }, StoreData>;
+
 type IdleState = State<
     EmployeeStates,
     {
@@ -46,12 +47,13 @@ const Idle: IdleState = transition => {
 
 const CuttingPotatoes: ClockedInState = (transition, machineData, setMachineData) => {
     if (machineData.uncutPotatoes === 0) {
-        throw new Guard('No potatoes to cut!');
+        throw new Guard('idle');
     }
 
     setMachineData({
         uncutPotatoes: machineData.uncutPotatoes - 1,
     });
+
     useEffect(() => {
         let done: boolean = false;
         const task = setTimeout(() => {
@@ -72,11 +74,11 @@ const CuttingPotatoes: ClockedInState = (transition, machineData, setMachineData
     }, []);
 
     return {
-        clockOut: transition('offDuty'),
+        clockOut: () => transition('offDuty'),
     };
 };
 
-const GettingPotatoes: ClockedInState = transition => {
+const GettingPotatoes: ClockedInState = (transition, machineData, setMachineData) => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setMachineData({
@@ -89,16 +91,12 @@ const GettingPotatoes: ClockedInState = transition => {
     }, []);
 
     return {
-        clockOut: transition('offDuty'),
+        clockOut: () => transition('offDuty'),
     };
 };
 
-const ManagingFryer: ClockedInState = transition => {
-    const { fryer } = useMachineData();
-
-    if (!fryer) {
-        throw Guard('idle', 'No fryer!');
-    }
+const ManagingFryer: ClockedInState = (transition, machineData) => {
+    const { fryer } = machineData;
 
     useEffect(() => {
         fryer.turnOn();
@@ -125,8 +123,8 @@ const states = {
     managingFryer: ManagingFryer,
 };
 
-const createEmployee = () => {
-    return new HookMachine(states);
+const createEmployee = (name: string, store) => {
+    return new HookMachine(states, 'offDuty', { name, store });
 };
 
 // export default class Employee extends Machine<EmployeeStates, MachineDataT> {}
