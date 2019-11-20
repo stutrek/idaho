@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { machineHooksStack, MachineHooksState } from './hooks';
+import { Guard, Final } from './hooks/classes';
 
 export { useState, useEffect, useMemo, useHistory } from './hooks';
 
@@ -18,33 +19,42 @@ interface Events<StatesMapT> {
     datachange: Current<StatesMapT>;
 }
 
-export class Guard {
-    constructor(public nextState: string) {}
-}
-
-export class HookMachine<StatesMapT, MachineDataT> {
+export class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
     constructor(
         public states: StatesMapT,
         initialState: keyof StatesMapT,
         public data: MachineDataT
     ) {
+        const internalPromise = new Promise<FinalStateT>((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+        this.then = internalPromise.then.bind(internalPromise);
+        this.catch = internalPromise.catch.bind(internalPromise);
+        this.finally = internalPromise.finally.bind(internalPromise);
+
         const emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);
         this.off = emitter.off.bind(emitter);
         this.emit = emitter.emit.bind(emitter);
 
-        this.current = {
-            name: initialState,
-            data: this.runState(initialState),
-        };
+        const initial = this.runState(initialState);
+
+        this.currentName = initial.finalState;
+        this.current = initial.updated;
     }
 
-    current: {
-        name: keyof StatesMapT;
-        data: any;
-    };
+    currentName: keyof StatesMapT;
+    current: any;
 
     histories = new Map<keyof StatesMapT, MachineHooksState>();
+
+    then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
+    catch: (cb: (error: Error) => any) => void;
+    finally: () => void;
+
+    private resolve: (data: FinalStateT) => void = () => undefined;
+    private reject: (data: FinalStateT) => void = () => undefined;
 
     on: <K extends keyof Events<StatesMapT>>(
         eventName: K,
@@ -59,24 +69,38 @@ export class HookMachine<StatesMapT, MachineDataT> {
         event: Current<StatesMapT>
     ) => void;
 
-    private runState = (state: keyof StatesMapT) => {
+    private runState = (
+        state: keyof StatesMapT
+    ): { finalState: keyof StatesMapT; updated: any } => {
+        if (typeof this.states[state] !== 'function') {
+            throw new Error(`Could not transition to unknown state ${state}.`);
+        }
         this.hooksState.index = 0;
-        machineHooksStack.push(this.hooksState);
-        // @ts-ignore
-        const updated = this.states[state](this.transition, this.data);
-        machineHooksStack.pop();
-        return updated;
+        let updated: any;
+        try {
+            machineHooksStack.push(this.hooksState);
+            // @ts-ignore
+            updated = this.states[state](this.transition, this.data);
+            machineHooksStack.pop();
+        } catch (e) {
+            machineHooksStack.pop();
+            if (e instanceof Guard && e.nextState in this.states) {
+                return this.runState(e.nextState as keyof StatesMapT);
+            }
+            throw e;
+        }
+        return { finalState: state, updated };
     };
 
     transition = (nextState: keyof StatesMapT = this.current.name) => {
         if (nextState !== this.current.name) {
-            for (const { remove, guards } of this.hooksState.items) {
+            for (const { remove, dependencies } of this.hooksState.items) {
                 if (remove !== undefined) {
                     remove();
-                    if (this.hooksState.useHistory && guards !== undefined) {
-                        // make sure the guards won't stop it in the next run
-                        guards.length = 0;
-                        guards.push({});
+                    if (this.hooksState.useHistory && dependencies !== undefined) {
+                        // make sure the dependencies won't stop it in the next run
+                        dependencies.length = 0;
+                        dependencies.push({});
                     }
                 }
             }
@@ -90,25 +114,16 @@ export class HookMachine<StatesMapT, MachineDataT> {
             }
         }
 
-        let updated;
-        try {
-            updated = this.runState(nextState);
-        } catch (e) {
-            if (e instanceof Guard && e.nextState in this.states) {
-                this.transition(e.nextState as keyof StatesMapT);
-                return;
-            }
-        }
+        const { finalState, updated } = this.runState(nextState);
 
-        const stateChanged = nextState !== this.current.name;
+        const stateChanged = finalState !== this.current.name;
         const dataChanged = shallowCompare(updated, this.current.data) === false;
 
         if (stateChanged || dataChanged) {
             this.current = {
-                name: nextState,
+                name: finalState,
                 data: updated,
             };
-            // do observable thing
         }
 
         if (stateChanged) {
@@ -119,6 +134,11 @@ export class HookMachine<StatesMapT, MachineDataT> {
         }
         if (stateChanged || dataChanged) {
             this.emit('change', this.current);
+        }
+
+        if (updated instanceof Final) {
+            // @ts-ignore
+            this.resolve(updated.data);
         }
     };
 

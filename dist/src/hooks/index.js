@@ -56,26 +56,26 @@ var __extends = (this && this.__extends) || (function () {
     }(Hook));
     var EffectHook = (function (_super) {
         __extends(EffectHook, _super);
-        function EffectHook(refreshMachine, effect, guards) {
+        function EffectHook(refreshMachine, effect, dependencies) {
             var _this = _super.call(this) || this;
             _this.refreshMachine = refreshMachine;
-            _this.guards = guards;
+            _this.dependencies = dependencies;
             _this.remove = function () {
-                if (_this.cleanup !== undefined) {
+                if (typeof _this.cleanup === 'function') {
                     _this.cleanup();
                 }
             };
-            _this.handleCall = function (effect, guards) {
-                if (_this.guards.length !== guards.length) {
+            _this.handleCall = function (effect, dependencies) {
+                if (_this.dependencies.length !== dependencies.length) {
                     _this.remove();
                     _this.cleanup = effect();
-                    _this.guards = guards;
+                    _this.dependencies = dependencies;
                 }
-                for (var i = 0; i < guards.length; i++) {
-                    if (Object.is(guards[i], _this.guards[i]) === false) {
+                for (var i = 0; i < dependencies.length; i++) {
+                    if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
                         _this.remove();
                         _this.cleanup = effect();
-                        _this.guards = guards;
+                        _this.dependencies = dependencies;
                         break;
                     }
                 }
@@ -87,17 +87,17 @@ var __extends = (this && this.__extends) || (function () {
     }(Hook));
     var MemoHook = (function (_super) {
         __extends(MemoHook, _super);
-        function MemoHook(refreshMachine, value, guards) {
+        function MemoHook(refreshMachine, value, dependencies) {
             var _this = _super.call(this) || this;
             _this.refreshMachine = refreshMachine;
             _this.value = value;
-            _this.guards = guards;
-            _this.handleCall = function (value, guards) {
-                if (_this.guards.length !== guards.length) {
+            _this.dependencies = dependencies;
+            _this.handleCall = function (value, dependencies) {
+                if (_this.dependencies.length !== dependencies.length) {
                     _this.value = value;
                 }
-                for (var i = 0; i < guards.length; i++) {
-                    if (Object.is(guards[i], _this.guards[i]) === false) {
+                for (var i = 0; i < dependencies.length; i++) {
+                    if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
                         _this.value = value;
                         break;
                     }
@@ -126,31 +126,31 @@ var __extends = (this && this.__extends) || (function () {
         var hook = items[index];
         return hook.handleCall();
     };
-    exports.useEffect = function (effect, guards) {
+    exports.useEffect = function (effect, dependencies) {
         if (getCurrentHookState() === undefined) {
             throw new Error('There was no hook state, this indicates a problem in Idaho.');
         }
         var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
         incrementCurrentHook();
         if (items.length <= index) {
-            items[index] = new EffectHook(refreshMachine, effect, guards);
+            items[index] = new EffectHook(refreshMachine, effect, dependencies);
         }
         else {
             var hook = items[index];
-            hook.handleCall(effect, guards);
+            hook.handleCall(effect, dependencies);
         }
     };
-    exports.useMemo = function (value, guards) {
+    exports.useMemo = function (value, dependencies) {
         if (getCurrentHookState() === undefined) {
             throw new Error('There was no hook state, this indicates a problem in Idaho.');
         }
         var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
         incrementCurrentHook();
         if (items.length <= index) {
-            items[index] = new MemoHook(refreshMachine, value, guards);
+            items[index] = new MemoHook(refreshMachine, value, dependencies);
         }
         var hook = items[index];
-        return hook.handleCall(value, guards);
+        return hook.handleCall(value, dependencies);
     };
     exports.useHistory = function (value) {
         if (getCurrentHookState() === undefined) {

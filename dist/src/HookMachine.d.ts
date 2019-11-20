@@ -9,7 +9,7 @@ interface Events<StatesMapT> {
     statechange: Current<StatesMapT>;
     datachange: Current<StatesMapT>;
 }
-export declare class HookMachine<StatesMapT, MachineDataT> {
+export declare class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
     states: StatesMapT;
     data: MachineDataT;
     constructor(states: StatesMapT, initialState: keyof StatesMapT, data: MachineDataT);
@@ -18,6 +18,11 @@ export declare class HookMachine<StatesMapT, MachineDataT> {
         data: any;
     };
     histories: Map<keyof StatesMapT, MachineHooksState>;
+    then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
+    catch: (cb: (error: Error) => any) => void;
+    finally: () => void;
+    private resolve;
+    private reject;
     on: <K extends keyof Events<StatesMapT>>(eventName: K, callback: (event: Current<StatesMapT>) => void) => void;
     off: <K extends keyof Events<StatesMapT>>(eventName: K, callback: (event: Current<StatesMapT>) => void) => void;
     private emit;

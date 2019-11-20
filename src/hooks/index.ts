@@ -8,7 +8,7 @@ export class MachineHooksState {
 
 abstract class Hook {
     abstract remove?: () => void;
-    abstract guards?: any[];
+    abstract dependencies?: any[];
     abstract handleCall: Function;
 }
 
@@ -21,7 +21,7 @@ class StateHook<T> extends Hook {
         this.refreshMachine();
     };
     remove: undefined;
-    guards: undefined;
+    dependencies: undefined;
     handleCall = (): [T, (newValue: T) => void] => [this.value, this.setValue];
 }
 
@@ -29,7 +29,7 @@ class EffectHook extends Hook {
     constructor(
         private refreshMachine: () => void,
         effect: () => void | (() => void),
-        public guards: any[]
+        public dependencies: any[]
     ) {
         super();
         this.cleanup = effect();
@@ -43,17 +43,17 @@ class EffectHook extends Hook {
         }
     };
 
-    handleCall = (effect: () => void | (() => void), guards: any[]) => {
-        if (this.guards.length !== guards.length) {
+    handleCall = (effect: () => void | (() => void), dependencies: any[]) => {
+        if (this.dependencies.length !== dependencies.length) {
             this.remove();
             this.cleanup = effect();
-            this.guards = guards;
+            this.dependencies = dependencies;
         }
-        for (let i = 0; i < guards.length; i++) {
-            if (Object.is(guards[i], this.guards[i]) === false) {
+        for (let i = 0; i < dependencies.length; i++) {
+            if (Object.is(dependencies[i], this.dependencies[i]) === false) {
                 this.remove();
                 this.cleanup = effect();
-                this.guards = guards;
+                this.dependencies = dependencies;
                 break;
             }
         }
@@ -61,18 +61,18 @@ class EffectHook extends Hook {
 }
 
 class MemoHook<T> extends Hook {
-    constructor(private refreshMachine: () => void, private value: T, public guards: any[]) {
+    constructor(private refreshMachine: () => void, private value: T, public dependencies: any[]) {
         super();
     }
 
     remove: undefined;
 
-    handleCall = (value: T, guards: any[]): T => {
-        if (this.guards.length !== guards.length) {
+    handleCall = (value: T, dependencies: any[]): T => {
+        if (this.dependencies.length !== dependencies.length) {
             this.value = value;
         }
-        for (let i = 0; i < guards.length; i++) {
-            if (Object.is(guards[i], this.guards[i]) === false) {
+        for (let i = 0; i < dependencies.length; i++) {
+            if (Object.is(dependencies[i], this.dependencies[i]) === false) {
                 this.value = value;
                 break;
             }
@@ -103,7 +103,7 @@ export const useState = <T>(defaultValue: T): [T, (newValue: T) => void] => {
     return hook.handleCall();
 };
 
-export const useEffect = (effect: () => void | (() => void), guards: any[]): void => {
+export const useEffect = (effect: () => void | (() => void), dependencies: any[]): void => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -111,14 +111,14 @@ export const useEffect = (effect: () => void | (() => void), guards: any[]): voi
     const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
-        items[index] = new EffectHook(refreshMachine, effect, guards);
+        items[index] = new EffectHook(refreshMachine, effect, dependencies);
     } else {
         const hook = items[index] as EffectHook;
-        hook.handleCall(effect, guards);
+        hook.handleCall(effect, dependencies);
     }
 };
 
-export const useMemo = <T>(value: T, guards: any[]) => {
+export const useMemo = <T>(value: T, dependencies: any[]) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -126,11 +126,11 @@ export const useMemo = <T>(value: T, guards: any[]) => {
     const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
-        items[index] = new MemoHook(refreshMachine, value, guards);
+        items[index] = new MemoHook(refreshMachine, value, dependencies);
     }
     const hook = items[index] as MemoHook<T>;
 
-    return hook.handleCall(value, guards);
+    return hook.handleCall(value, dependencies);
 };
 
 export const useHistory = (value: boolean) => {
