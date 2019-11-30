@@ -1,4 +1,4 @@
-const { useEffect, useState, HookMachine } = require('../dist/index');
+import { useEffect, useState, HookMachine } from '../dist/index';
 
 const Red = transition => {
     useEffect(() => {
@@ -49,7 +49,7 @@ const Green = transition => {
 };
 
 const BlinkingRed = transition => {
-    const [isOn, setIsOn] = useState(true);
+    const [isOn, setIsOn] = useStateData(true);
     useEffect(() => {
         const timeout = setTimeout(() => {
             setIsOn(!isOn);

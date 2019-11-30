@@ -106,10 +106,9 @@
             this.on = emitter.on.bind(emitter);
             this.off = emitter.off.bind(emitter);
             this.emit = emitter.emit.bind(emitter);
-            this.current = {
-                name: initialState,
-                data: this.runState(initialState)
-            };
+            var initial = this.runState(initialState);
+            this.currentName = initial.finalState;
+            this.current = initial.updated;
         }
         return HookMachine;
     }());

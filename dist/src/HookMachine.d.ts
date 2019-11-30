@@ -13,10 +13,8 @@ export declare class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
     states: StatesMapT;
     data: MachineDataT;
     constructor(states: StatesMapT, initialState: keyof StatesMapT, data: MachineDataT);
-    current: {
-        name: keyof StatesMapT;
-        data: any;
-    };
+    currentName: keyof StatesMapT;
+    current: any;
     histories: Map<keyof StatesMapT, MachineHooksState>;
     then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
     catch: (cb: (error: Error) => any) => void;

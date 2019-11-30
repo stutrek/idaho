@@ -12,7 +12,7 @@ abstract class Hook {
     abstract handleCall: Function;
 }
 
-class StateHook<T> extends Hook {
+class StateDataHook<T> extends Hook {
     constructor(private refreshMachine: () => void, public value: T) {
         super();
     }

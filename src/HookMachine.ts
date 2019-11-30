@@ -69,6 +69,13 @@ export class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
         event: Current<StatesMapT>
     ) => void;
 
+    setData(newData: Partial<MachineDataT>) {
+        this.data = {
+            ...this.data,
+            ...newData,
+        };
+    }
+
     private runState = (
         state: keyof StatesMapT
     ): { finalState: keyof StatesMapT; updated: any } => {
@@ -92,7 +99,7 @@ export class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
         return { finalState: state, updated };
     };
 
-    transition = (nextState: keyof StatesMapT = this.current.name) => {
+    transition = (nextState: keyof StatesMapT = this.current.name, props: any = undefined) => {
         if (nextState !== this.current.name) {
             for (const { remove, dependencies } of this.hooksState.items) {
                 if (remove !== undefined) {
@@ -109,12 +116,13 @@ export class HookMachine<StatesMapT, MachineDataT, FinalStateT = any> {
             }
             if (this.histories.has(nextState)) {
                 this.hooksState = this.histories.get(nextState)!;
+                this.hooksState.setProps(props);
             } else {
-                this.hooksState = new MachineHooksState(this.transition);
+                this.hooksState = new MachineHooksState(this.transition, props);
             }
         }
 
-        const { finalState, updated } = this.runState(nextState);
+        const { finalState, updated } = this.runState(nextState, props);
 
         const stateChanged = finalState !== this.current.name;
         const dataChanged = shallowCompare(updated, this.current.data) === false;
