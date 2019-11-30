@@ -84,16 +84,39 @@ States are functions that return an object. They are called with a control objec
 
 When calling a `control.transition`, you may pass in additional arguments, which will be passed into the state.
 
+Since states are functions you can set breakpoints and put log statements in them. States can be written any way JavaScript will Allow. The following are all the same:
+
 ```javascript
-const exampleState = (control, firstName, lastName) => {
-    console.log(firstName);
+const on = control => ({
+    turnOff: () => control.transition('off'),
+});
+
+const on = control => {
     return {
-        firstName,
-        lastName,
-        next: () => control.transition('nextState'),
-        updateData: (first, last) => control.transition('exampleState', first, last),
+        turnOff: () => control.transition('off'),
     };
 };
+
+function on(control) {
+    return {
+        turnOff: function() {
+            control.transition('off');
+        },
+    };
+}
+```
+
+For small states they can even be written in the state object declaration.
+
+```javascript
+const states = {
+    off: c => ({
+        turnOn: () => c.transition('on')
+    }),
+    on: c => ({
+        turnOff: () => c.transition('off')
+    });
+}
 ```
 
 ## Control Object
@@ -112,11 +135,11 @@ These work just like React hooks. The simpest is `useStateData`, which is simila
 
 ```javascript
 const stateWithData = (control) => {
-    const [data, setData] = useStateData(undefined);
+    const [count, setCounter] = useStateData(undefined);
 
     return {
-        data
-        updateData: (newData) => setData(newData),
+        count
+        increment: () => setCounter(count + 1),
         next: () => control.transition('next')
     }
 }
