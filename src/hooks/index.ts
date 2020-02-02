@@ -47,6 +47,7 @@ class EffectHook extends Hook {
             this.remove();
             this.cleanup = effect();
             this.dependencies = dependencies;
+            return;
         }
         for (let i = 0; i < dependencies.length; i++) {
             if (Object.is(dependencies[i], this.dependencies[i]) === false) {

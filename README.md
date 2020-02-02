@@ -278,23 +278,44 @@ const loading = (control, id) => {
                     return;
                 }
                 if (response.ok === false) {
-                    control.transition('error');
+                    control.transition('error', response);
                 }
                 return response.json();
             })
             .then(data => control.transition('done', data))
-            .catch(() => control.transition('error'));
+            .catch(err => control.transition('error', err));
         return () => {
             cancelled = true;
         };
     }, url);
+
+    return {
+        cancel: reason => control.transition('cancelled', reason),
+    };
 };
 
 const done = (control, data) => {
-    return new Final(data);
+    return new Final({
+        success: true,
+        data,
+    });
 };
 
-const loader = new Machine({ idle, loading, done }, { baseUrl: '/api/cats/' });
+const errored = error => {
+    return new Final({
+        success: false,
+        error,
+    });
+};
+
+const cancelled = reason => {
+    return new Final({
+        cancelled: true,
+        reason,
+    });
+};
+
+const loader = new Machine({ idle, loading, done, errored, cancelled }, { baseUrl: '/api/cats/' });
 loader.state.load(5);
 
 // with regular promises

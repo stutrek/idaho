@@ -118,7 +118,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
                 }
             }
             if (this.hooksState.useHistory) {
-                this.histories.set(this.current.name, this.hooksState);
+                this.histories.set(this.currentName, this.hooksState);
             }
             if (this.histories.has(nextStateName)) {
                 this.hooksState = this.histories.get(nextStateName)!;

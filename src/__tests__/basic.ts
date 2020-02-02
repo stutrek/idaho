@@ -1,25 +1,14 @@
-import { Machine, Control, Final, useStateData } from '../../index';
-
-interface OnOffStates {
-    on: SwitchState;
-    off: SwitchState;
-    oopsie: SwitchState;
-    done: SwitchState;
-    dataSettingState: SwitchState;
-    stateWithData: SwitchState;
-}
-
-type OnOffControl = Control<OnOffStates, {}, {}>;
+import { Machine, Control, Final, useStateData, useHistory, useEffect, useMemo } from '../../index';
 
 type SwitchState = (
-    control: OnOffControl
+    control: TestControl
 ) => {
     oopsie: () => void;
     switch: () => void;
     done: () => Final<string>;
 };
 
-const off = (control: OnOffControl) => {
+const off = (control: TestControl) => {
     return {
         oopsie: () => control.transition('oopsie'),
         switch: () => control.transition('on'),
@@ -27,11 +16,13 @@ const off = (control: OnOffControl) => {
     };
 };
 
-const on = (control: OnOffControl) => {
+const on = (control: TestControl) => {
     return {
         oopsie: () => control.transition('oopsie'),
         switch: () => control.transition('off'),
         finish: () => control.transition('done'),
+        sendArguments: (arg1: any, arg2: any) =>
+            control.transition('stateWithArguments', arg1, arg2),
         switchToDataSettingState: () => control.transition('dataSettingState'),
         setSomeData: () => {
             control.setData({
@@ -39,10 +30,15 @@ const on = (control: OnOffControl) => {
             });
         },
         switchToStateWithData: () => control.transition('stateWithData'),
+        switchToHistoryState: () => control.transition('stateWithHistory'),
+        switchToStateWithEffect: () => control.transition('stateWithEffect', 0),
+        switchToStateWithEffectAndHistory: () => control.transition('stateWithEffectAndHistory', 0),
+        switchToStateWithEffectAndCleanup: () => control.transition('stateWithEffectAndCleanup', 0),
+        switchToStateWithMemo: () => control.transition('stateWithMemo'),
     };
 };
 
-const oopsie = (control: OnOffControl) => {
+const oopsie = (control: TestControl) => {
     throw new Error('oops!');
 };
 
@@ -50,24 +46,134 @@ const done = () => {
     return new Final('done');
 };
 
-const dataSettingState = (control: OnOffControl) => {
+const stateWithArguments = (control: TestControl, arg1: any, arg2: any) => {
+    return {
+        arg1,
+        arg2,
+    };
+};
+const dataSettingState = (control: TestControl) => {
     control.setData({
         hey: 'there',
     });
     return {};
 };
 
-const stateWithData = (control: OnOffControl) => {
+const stateWithData = (control: TestControl) => {
     const [value, setValue] = useStateData(0);
     return {
         setValue,
         value,
+        turnBackOn: () => control.transition('on'),
     };
 };
 
-const onOffStates = { off, on, oopsie, done, dataSettingState, stateWithData };
+const stateWithHistory = (control: TestControl) => {
+    const [value, setValue] = useStateData(0);
+    useHistory(true);
+    return {
+        setValue,
+        value,
+        turnBackOn: () => control.transition('on'),
+    };
+};
 
-const makeMachine = () => new Machine(onOffStates, 'on', {});
+let runs = 0;
+const stateWithEffect = (control: TestControl, arg: number) => {
+    useEffect(() => {
+        runs++;
+    }, [arg]);
+
+    return {
+        runs,
+        runAgain: () => control.transition('stateWithEffect', arg + 1),
+        dontRunAgain: () => control.transition('stateWithEffect', arg),
+        switchToOn: () => control.transition('on'),
+    };
+};
+
+let runs2 = 0;
+const stateWithEffectAndHistory = (control: TestControl, arg: number) => {
+    useHistory(true);
+    useEffect(() => {
+        runs2++;
+    }, [arg]);
+
+    return {
+        runs: runs2,
+        runAgain: () => control.transition('stateWithEffectAndHistory', arg + 1),
+        dontRunAgain: () => control.transition('stateWithEffectAndHistory', arg),
+        switchToOn: () => control.transition('on'),
+    };
+};
+
+let runs3 = 0;
+let cleanups = 0;
+const stateWithEffectAndCleanup = (control: TestControl, arg: number) => {
+    useEffect(() => {
+        runs3++;
+        return () => {
+            cleanups++;
+        };
+    }, [arg]);
+
+    return {
+        runs: runs3,
+        runAgain: () => control.transition('stateWithEffectAndCleanup', arg + 1),
+        dontRunAgain: () => control.transition('stateWithEffectAndCleanup', arg),
+        switchToOn: () => control.transition('on'),
+    };
+};
+
+const stateWithMemo = (control: TestControl) => {
+    const [data, setData] = useStateData(0);
+    const memoized = useMemo(
+        {
+            data,
+        },
+        [data]
+    );
+
+    return {
+        memoized,
+        rerun: () => setData(data + 1),
+        dontRerun: () => control.transition('stateWithMemo'),
+    };
+};
+
+interface TestStates {
+    on: SwitchState;
+    off: SwitchState;
+    oopsie: SwitchState;
+    done: SwitchState;
+    dataSettingState: SwitchState;
+    stateWithData: SwitchState;
+    stateWithHistory: SwitchState;
+    stateWithArguments: SwitchState;
+    stateWithEffect: SwitchState;
+    stateWithEffectAndHistory: SwitchState;
+    stateWithEffectAndCleanup: SwitchState;
+    stateWithMemo: SwitchState;
+}
+
+const testStates = {
+    off,
+    on,
+    oopsie,
+    done,
+    dataSettingState,
+    stateWithData,
+    stateWithHistory,
+    stateWithArguments,
+    stateWithEffect,
+    stateWithEffectAndHistory,
+    stateWithEffectAndCleanup,
+    stateWithMemo,
+};
+
+type TestControl = Control<TestStates, {}, {}>;
+
+const makeMachine = () => new Machine(testStates, 'on', {});
 
 describe('lifecycle', () => {
     it('should make a new with the right initial state', () => {
@@ -108,6 +214,13 @@ describe('lifecycle', () => {
         machine.current.finish();
         const value = await machine;
         expect(value).toBe('done');
+    });
+
+    it('should send arguments to states', async () => {
+        const machine = makeMachine();
+        machine.current.sendArguments(1, 2);
+        expect(machine.current.arg1).toBe(1);
+        expect(machine.current.arg2).toBe(2);
     });
 });
 
@@ -201,14 +314,82 @@ describe('hooks', () => {
         expect(machine.current.value).toBe(69); // heh
     });
 
-    it('should store data on the current state', () => {
+    it('should destroy state data when switched out and back', () => {
         const machine = makeMachine();
 
         machine.current.switchToStateWithData();
+        machine.current.setValue(69);
+        machine.current.turnBackOn();
+        machine.current.switchToStateWithData();
 
         expect(machine.current.value).toBe(0);
+    });
 
+    it('should keep hook data when its a history state.', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToHistoryState();
         machine.current.setValue(69);
-        expect(machine.current.value).toBe(69); // heh
+        machine.current.turnBackOn();
+        machine.current.switchToHistoryState();
+
+        expect(machine.current.value).toBe(69);
+    });
+
+    it('should run effects when appropriate.', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithEffect();
+        expect(machine.current.runs).toBe(1);
+        machine.current.dontRunAgain();
+        expect(machine.current.runs).toBe(1);
+        machine.current.runAgain();
+        expect(machine.current.runs).toBe(2);
+
+        machine.current.switchToOn();
+        machine.current.switchToStateWithEffect();
+        expect(machine.current.runs).toBe(3);
+    });
+
+    it('should rerun effects when switching back with history.', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithEffectAndHistory();
+        expect(machine.current.runs).toBe(1);
+        machine.current.dontRunAgain();
+        expect(machine.current.runs).toBe(1);
+        machine.current.runAgain();
+        expect(machine.current.runs).toBe(2);
+
+        machine.current.switchToOn();
+        machine.current.switchToStateWithEffectAndHistory();
+        expect(machine.current.runs).toBe(3);
+    });
+
+    it('should run cleanups.', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithEffectAndCleanup();
+        expect(cleanups).toBe(0);
+        machine.current.dontRunAgain();
+        expect(cleanups).toBe(0);
+        machine.current.runAgain();
+        expect(cleanups).toBe(1);
+
+        machine.current.switchToOn();
+        expect(cleanups).toBe(2);
+    });
+
+    it('should memoize.', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithMemo();
+
+        const original = machine.current.memoized;
+        machine.current.dontRerun();
+        expect(original).toBe(machine.current.memoized);
+
+        machine.current.rerun();
+        expect(original !== machine.current.memoized).toBe(true);
     });
 });
