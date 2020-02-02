@@ -36,7 +36,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             var _this = this;
             this.states = states;
             this.data = data;
-            this.currentArgs = [];
+            this.stateArgs = [];
             this.isTransitioning = false;
             this.histories = new Map();
             this.resolve = function () { return undefined; };
@@ -71,9 +71,9 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                     return;
                 }
                 _this.isTransitioning = true;
-                var isStateChange = nextStateName !== _this.currentName;
-                _this.currentArgs = args;
-                var currentData = _this.data;
+                var isStateChange = nextStateName !== _this.stateName;
+                _this.stateArgs = args;
+                var stateData = _this.data;
                 var control = new ControlObject_1.Control(_this);
                 if (isStateChange) {
                     for (var _a = 0, _b = _this.hooksState.items; _a < _b.length; _a++) {
@@ -87,23 +87,23 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                         }
                     }
                     if (_this.hooksState.useHistory) {
-                        _this.histories.set(_this.currentName, _this.hooksState);
+                        _this.histories.set(_this.stateName, _this.hooksState);
                     }
                     if (_this.histories.has(nextStateName)) {
                         _this.hooksState = _this.histories.get(nextStateName);
                     }
                     else {
                         _this.hooksState = new hooks_1.MachineHooksState(function () {
-                            _this.current = _this.runState(_this.states[nextStateName], control, args);
+                            _this.state = _this.runState(_this.states[nextStateName], control, args);
                         });
                     }
                 }
                 var nextStateValue = _this.runState(_this.states[nextStateName], control, args);
                 if (control.isActive) {
                     _this.isTransitioning = false;
-                    _this.current = nextStateValue;
-                    _this.currentName = nextStateName;
-                    var dataChanged = _this.data !== currentData;
+                    _this.state = nextStateValue;
+                    _this.stateName = nextStateName;
+                    var dataChanged = _this.data !== stateData;
                     if (isStateChange) {
                         _this.emit('statechange', _this);
                     }
@@ -120,7 +120,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                 }
             };
             this.hooksState = new hooks_1.MachineHooksState(function () {
-                _this.transition.apply(_this, __spreadArrays([_this.currentName], _this.currentArgs));
+                _this.transition.apply(_this, __spreadArrays([_this.stateName], _this.stateArgs));
             });
             var internalPromise = new Promise(function (resolve, reject) {
                 _this.resolve = resolve;

@@ -8,9 +8,9 @@ export declare class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     states: StatesMapT;
     data?: MachineDataT;
     constructor(states: StatesMapT, initialState: keyof StatesMapT, data?: MachineDataT);
-    currentName: keyof StatesMapT;
-    current: any;
-    private currentArgs;
+    stateName: keyof StatesMapT;
+    state: any;
+    private stateArgs;
     private isTransitioning;
     histories: Map<keyof StatesMapT, MachineHooksState>;
     then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
@@ -20,8 +20,14 @@ export declare class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     private reject;
     private resolved;
     private rejected;
-    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
-    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
+    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
+        eventName: K,
+        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
+    ) => void;
+    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
+        eventName: K,
+        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
+    ) => void;
     private emit;
     setData(newData: Partial<MachineDataT>): void;
     private runState;

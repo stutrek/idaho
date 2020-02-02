@@ -62,10 +62,10 @@ class GettingPotatoes extends State<Employee> {
 class ManagingFryer extends State<Employee> {
     constructor(machine: Employee, fryer: Fryer) {
         super(machine);
-        if ('turnOn' in fryer.current) {
-            fryer.current.turnOn();
-        } else if ('clean' in fryer.current) {
-            fryer.current.clean();
+        if ('turnOn' in fryer.state) {
+            fryer.state.turnOn();
+        } else if ('clean' in fryer.state) {
+            fryer.state.clean();
         }
     }
 }

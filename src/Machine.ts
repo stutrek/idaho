@@ -31,9 +31,9 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
         this.transition(initialState);
     }
 
-    currentName: keyof StatesMapT;
-    current: any;
-    private currentArgs: any[] = [];
+    stateName: keyof StatesMapT;
+    state: any;
+    private stateArgs: any[] = [];
 
     private isTransitioning = false;
 
@@ -100,9 +100,9 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
             return;
         }
         this.isTransitioning = true;
-        let isStateChange = nextStateName !== this.currentName;
-        this.currentArgs = args;
-        const currentData = this.data;
+        let isStateChange = nextStateName !== this.stateName;
+        this.stateArgs = args;
+        const stateData = this.data;
 
         const control = new Control(this);
 
@@ -118,13 +118,13 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
                 }
             }
             if (this.hooksState.useHistory) {
-                this.histories.set(this.currentName, this.hooksState);
+                this.histories.set(this.stateName, this.hooksState);
             }
             if (this.histories.has(nextStateName)) {
                 this.hooksState = this.histories.get(nextStateName)!;
             } else {
                 this.hooksState = new MachineHooksState(() => {
-                    this.current = this.runState(this.states[nextStateName], control, args);
+                    this.state = this.runState(this.states[nextStateName], control, args);
                 });
             }
         }
@@ -133,9 +133,9 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
 
         if (control.isActive) {
             this.isTransitioning = false;
-            this.current = nextStateValue;
-            this.currentName = nextStateName;
-            const dataChanged = this.data !== currentData;
+            this.state = nextStateValue;
+            this.stateName = nextStateName;
+            const dataChanged = this.data !== stateData;
 
             if (isStateChange) {
                 this.emit('statechange', this);
@@ -157,6 +157,6 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     };
 
     private hooksState = new MachineHooksState(() => {
-        this.transition(this.currentName, ...this.currentArgs);
+        this.transition(this.stateName, ...this.stateArgs);
     });
 }

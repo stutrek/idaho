@@ -40,8 +40,8 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                 }
                 machine.setData(data);
             };
-            this.previousState = machine.current;
-            this.previousStateName = machine.currentName;
+            this.previousState = machine.state;
+            this.previousStateName = machine.stateName;
         }
         return Control;
     }());

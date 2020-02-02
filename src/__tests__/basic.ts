@@ -178,31 +178,31 @@ const makeMachine = () => new Machine(testStates, 'on', {});
 describe('lifecycle', () => {
     it('should make a new with the right initial state', () => {
         const machine = makeMachine();
-        expect(machine.currentName).toBe('on');
+        expect(machine.stateName).toBe('on');
     });
 
     it('should switch to off', () => {
         const machine = makeMachine();
-        machine.current.switch();
-        expect(machine.currentName).toBe('off');
+        machine.state.switch();
+        expect(machine.stateName).toBe('off');
     });
 
     it('should whine when you try to switch from a state the machine is no longer in.', () => {
         const machine = makeMachine();
-        const oldCurrent = machine.current;
-        machine.current.switch();
+        const oldCurrent = machine.state;
+        machine.state.switch();
         expect(oldCurrent.switch).toThrow();
     });
 
     it('should throw when a state throws', () => {
         const machine = makeMachine();
-        expect(() => machine.current.oopsie()).toThrowErrorMatchingInlineSnapshot(`"oops!"`);
+        expect(() => machine.state.oopsie()).toThrowErrorMatchingInlineSnapshot(`"oops!"`);
     });
 
     it('should reject when a state throws', () => {
         const machine = makeMachine();
         try {
-            machine.current.oopsie();
+            machine.state.oopsie();
         } catch (e) {
             // eslint-disable-line
         }
@@ -211,16 +211,16 @@ describe('lifecycle', () => {
 
     it('should resolve when a state returns a Finish', async () => {
         const machine = makeMachine();
-        machine.current.finish();
+        machine.state.finish();
         const value = await machine;
         expect(value).toBe('done');
     });
 
     it('should send arguments to states', async () => {
         const machine = makeMachine();
-        machine.current.sendArguments(1, 2);
-        expect(machine.current.arg1).toBe(1);
-        expect(machine.current.arg2).toBe(2);
+        machine.state.sendArguments(1, 2);
+        expect(machine.state.arg1).toBe(1);
+        expect(machine.state.arg2).toBe(2);
     });
 });
 
@@ -240,7 +240,7 @@ describe('data', () => {
     it('should be able to set data from a state', () => {
         const machine = makeMachine();
 
-        machine.current.switchToDataSettingState();
+        machine.state.switchToDataSettingState();
 
         expect(machine.data).toEqual({
             hey: 'there',
@@ -249,8 +249,8 @@ describe('data', () => {
 
     it('should complain when you set data from a state the machine is not in.', () => {
         const machine = makeMachine();
-        const oldCurrent = machine.current;
-        machine.current.switch();
+        const oldCurrent = machine.state;
+        machine.state.switch();
 
         expect(oldCurrent.setSomeData).toThrow();
     });
@@ -265,7 +265,7 @@ describe('emitter', () => {
         machine.on('statechange', spy);
         machine.on('change', spy2);
 
-        machine.current.switch();
+        machine.state.switch();
 
         expect(spy).toHaveBeenCalledWith(machine);
         expect(spy2).toHaveBeenCalledWith(machine);
@@ -295,7 +295,7 @@ describe('emitter', () => {
         machine.on('datachange', spy);
         machine.on('change', spy2);
 
-        machine.current.switchToDataSettingState();
+        machine.state.switchToDataSettingState();
 
         expect(spy).toHaveBeenCalledWith(machine);
         expect(spy2).toHaveBeenCalledWith(machine);
@@ -303,93 +303,93 @@ describe('emitter', () => {
 });
 
 describe('hooks', () => {
-    it('should store data on the current state', () => {
+    it('should store data on the state state', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithData();
+        machine.state.switchToStateWithData();
 
-        expect(machine.current.value).toBe(0);
+        expect(machine.state.value).toBe(0);
 
-        machine.current.setValue(69);
-        expect(machine.current.value).toBe(69); // heh
+        machine.state.setValue(69);
+        expect(machine.state.value).toBe(69); // heh
     });
 
     it('should destroy state data when switched out and back', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithData();
-        machine.current.setValue(69);
-        machine.current.turnBackOn();
-        machine.current.switchToStateWithData();
+        machine.state.switchToStateWithData();
+        machine.state.setValue(69);
+        machine.state.turnBackOn();
+        machine.state.switchToStateWithData();
 
-        expect(machine.current.value).toBe(0);
+        expect(machine.state.value).toBe(0);
     });
 
     it('should keep hook data when its a history state.', () => {
         const machine = makeMachine();
 
-        machine.current.switchToHistoryState();
-        machine.current.setValue(69);
-        machine.current.turnBackOn();
-        machine.current.switchToHistoryState();
+        machine.state.switchToHistoryState();
+        machine.state.setValue(69);
+        machine.state.turnBackOn();
+        machine.state.switchToHistoryState();
 
-        expect(machine.current.value).toBe(69);
+        expect(machine.state.value).toBe(69);
     });
 
     it('should run effects when appropriate.', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithEffect();
-        expect(machine.current.runs).toBe(1);
-        machine.current.dontRunAgain();
-        expect(machine.current.runs).toBe(1);
-        machine.current.runAgain();
-        expect(machine.current.runs).toBe(2);
+        machine.state.switchToStateWithEffect();
+        expect(machine.state.runs).toBe(1);
+        machine.state.dontRunAgain();
+        expect(machine.state.runs).toBe(1);
+        machine.state.runAgain();
+        expect(machine.state.runs).toBe(2);
 
-        machine.current.switchToOn();
-        machine.current.switchToStateWithEffect();
-        expect(machine.current.runs).toBe(3);
+        machine.state.switchToOn();
+        machine.state.switchToStateWithEffect();
+        expect(machine.state.runs).toBe(3);
     });
 
     it('should rerun effects when switching back with history.', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithEffectAndHistory();
-        expect(machine.current.runs).toBe(1);
-        machine.current.dontRunAgain();
-        expect(machine.current.runs).toBe(1);
-        machine.current.runAgain();
-        expect(machine.current.runs).toBe(2);
+        machine.state.switchToStateWithEffectAndHistory();
+        expect(machine.state.runs).toBe(1);
+        machine.state.dontRunAgain();
+        expect(machine.state.runs).toBe(1);
+        machine.state.runAgain();
+        expect(machine.state.runs).toBe(2);
 
-        machine.current.switchToOn();
-        machine.current.switchToStateWithEffectAndHistory();
-        expect(machine.current.runs).toBe(3);
+        machine.state.switchToOn();
+        machine.state.switchToStateWithEffectAndHistory();
+        expect(machine.state.runs).toBe(3);
     });
 
     it('should run cleanups.', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithEffectAndCleanup();
+        machine.state.switchToStateWithEffectAndCleanup();
         expect(cleanups).toBe(0);
-        machine.current.dontRunAgain();
+        machine.state.dontRunAgain();
         expect(cleanups).toBe(0);
-        machine.current.runAgain();
+        machine.state.runAgain();
         expect(cleanups).toBe(1);
 
-        machine.current.switchToOn();
+        machine.state.switchToOn();
         expect(cleanups).toBe(2);
     });
 
     it('should memoize.', () => {
         const machine = makeMachine();
 
-        machine.current.switchToStateWithMemo();
+        machine.state.switchToStateWithMemo();
 
-        const original = machine.current.memoized;
-        machine.current.dontRerun();
-        expect(original).toBe(machine.current.memoized);
+        const original = machine.state.memoized;
+        machine.state.dontRerun();
+        expect(original).toBe(machine.state.memoized);
 
-        machine.current.rerun();
-        expect(original !== machine.current.memoized).toBe(true);
+        machine.state.rerun();
+        expect(original !== machine.state.memoized).toBe(true);
     });
 });

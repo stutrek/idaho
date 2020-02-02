@@ -17,8 +17,8 @@ export class Control<StatesMapT, DataT, FinalStateT> {
             }
             machine.setData(data);
         };
-        this.previousState = machine.current;
-        this.previousStateName = machine.currentName;
+        this.previousState = machine.state;
+        this.previousStateName = machine.stateName;
     }
 
     data: DataT;

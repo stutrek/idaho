@@ -60,9 +60,9 @@ class GettingPotatoes extends State {
 class ManagingFryer extends State {
     constructor(parent: Machine<any, any>, fryer: Machine<any, any>) {
         super(parent);
-        if (fryer.current instanceof Off) {
-            fryer.current.turnOn();
-        } else if (fryer.current instanceof BasketFullOfGarbage) {
+        if (fryer.state instanceof Off) {
+            fryer.state.turnOn();
+        } else if (fryer.state instanceof BasketFullOfGarbage) {
             fryer.clean();
         }
     }
@@ -141,7 +141,7 @@ class Cooking extends State {
     };
     effects = [
         machine => {
-            machine.current.timeout = setTimeout(() => {
+            machine.state.timeout = setTimeout(() => {
                 this.machine.transition(BasketFullOfFries);
             }, 20000);
         },

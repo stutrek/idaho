@@ -68,7 +68,7 @@ class Cooking extends State<Fryer> {
     };
     effects = [
         machine => {
-            machine.current.timeout = setTimeout(() => {
+            machine.state.timeout = setTimeout(() => {
                 this.machine.transition(BasketFullOfFries);
             }, 20000);
         },
