@@ -1,8 +1,8 @@
 # Idaho
 
-Idaho is a state machine with functional aspects. Each state is a function that returns an object containing its transitions and any values associated with this state. States are functional, but machines are stateful.
+Idaho is a state machine with functional aspects. Each state is a function that returns an object containing its transitions and any values associated with this state. States are functions, but machines are stateful.
 
-It aims implement state charts using JavaScript idioms, using code rather than configuration. Everything that's possible with XState and other state machine/state chart libraries should be possible with Idaho.
+The goal of this library is to make it easy to go from a state chart to code with all state chart features. It does not aim to implement SCXML or other standards surrounding state charts.
 
 -   States are functions rather than configuration.
 -   States have a React-like hooks API for data and side effects.
@@ -11,6 +11,8 @@ It aims implement state charts using JavaScript idioms, using code rather than c
 -   Machines are event emitters.
 -   Machines are promises that resolve when the machine reaches a final state.
 -   Machines have a single state, ParallelMachines have parallel states.
+
+For a great explanation of state charts, see [David K's talk at React Rally 2017](https://www.youtube.com/watch?v=VU1NKX6Qkxc). His library, XState, is great implemetation of SCXML and a very configurable state chart.
 
 ## Basic Usage
 
@@ -402,3 +404,7 @@ const stateWithSelfTransition = (control, arg1) => {
     };
 };
 ```
+
+## Contrasting with XState and other state chart libraries
+
+Idaho puts code before configuration. This can simplify the development process because

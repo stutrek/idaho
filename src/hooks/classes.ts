@@ -3,5 +3,5 @@ export class Guard {
 }
 
 export class Final<T> {
-    constructor(public data: T) {}
+    constructor(public value: T) {}
 }

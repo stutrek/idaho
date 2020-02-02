@@ -1,9 +1,8 @@
 export class MachineHooksState {
-    constructor(private transition: () => void) {}
+    constructor(public refreshMachine: () => void) {}
     items: Hook[] = [];
     index = 0;
     useHistory = false;
-    refreshMachine = () => this.transition();
 }
 
 abstract class Hook {
@@ -96,9 +95,9 @@ export const useState = <T>(defaultValue: T): [T, (newValue: T) => void] => {
     const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
-        items[index] = new StateHook(refreshMachine, defaultValue);
+        items[index] = new StateDataHook(refreshMachine, defaultValue);
     }
-    const hook = items[index] as StateHook<T>;
+    const hook = items[index] as StateDataHook<T>;
 
     return hook.handleCall();
 };

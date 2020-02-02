@@ -1,101 +1,142 @@
-import { State, IState } from './State';
 import { EventEmitter } from 'events';
+import { machineHooksStack, MachineHooksState } from './hooks';
+import { Guard, Final } from './hooks/classes';
+import { Control } from './ControlObject';
 
-interface Events<MachineT> {
-    transition: MachineT;
-    'child-transition': MachineT;
-    'data-change': MachineT;
+export { useState, useEffect, useMemo, useHistory } from './hooks';
+
+interface Current<StatesMapT> {
+    name: keyof StatesMapT;
+    data: any;
 }
 
-export class Machine<
-    StatesT extends State<Machine<StatesT, ParentT, MachineDataT>>,
-    ParentT extends Machine<any> = undefined,
-    MachineDataT = {}
-> {
+interface Events<StatesMapT> {
+    change: Current<StatesMapT>;
+    statechange: Current<StatesMapT>;
+    datachange: Current<StatesMapT>;
+}
+
+export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     constructor(
-        public State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>,
-        public parent?: ParentT
+        public states: StatesMapT,
+        initialState: keyof StatesMapT,
+        public data?: MachineDataT
     ) {
+        const internalPromise = new Promise<FinalStateT>((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+        this.then = internalPromise.then.bind(internalPromise);
+        this.catch = internalPromise.catch.bind(internalPromise);
+        this.finally = internalPromise.finally.bind(internalPromise);
+
         const emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);
         this.off = emitter.off.bind(emitter);
         this.emit = emitter.emit.bind(emitter);
 
-        // @ts-ignore
-        if (State === undefined && this.initialState !== undefined) {
-            // @ts-ignore
-            this.transition(this.initialState);
-        } else if (State !== undefined) {
-            this.transition(State);
-        } else {
-            throw new Error('Machine needs either a state passed it on an initialState');
-        }
+        this.transition(initialState);
     }
 
-    initialState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>> | undefined;
+    currentName: keyof StatesMapT;
+    current: any;
+    private currentArgs: any[] = [];
 
-    histories = new Map<IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, StatesT>();
+    histories = new Map<keyof StatesMapT, MachineHooksState>();
 
-    effectClearers: (() => void)[] = [];
+    then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
+    catch: (cb: (error: Error) => any) => void;
+    finally: () => void;
 
-    current: StatesT;
+    private resolve: (data: FinalStateT) => void = () => undefined;
+    private reject: (data: FinalStateT) => void = () => undefined;
 
-    on: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+    on: <K extends keyof Events<StatesMapT>>(
         eventName: K,
-        state: StatesT | MachineDataT
+        callback: (event: Current<StatesMapT>) => void
     ) => void;
-    off: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+    off: <K extends keyof Events<StatesMapT>>(
         eventName: K,
-        state: StatesT | MachineDataT
+        callback: (event: Current<StatesMapT>) => void
     ) => void;
-    private emit: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(
+    private emit: <K extends keyof Events<StatesMapT>>(
         eventName: K,
-        state: StatesT | MachineDataT
+        event: Current<StatesMapT>
     ) => void;
 
-    data: MachineDataT | undefined;
-
-    private nextData: Partial<MachineDataT> | undefined;
     setData(newData: Partial<MachineDataT>) {
         this.data = {
             ...this.data,
             ...newData,
         };
-        this.emit('data-change', this.data!);
     }
 
-    transition(NextState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>) {
-        for (const clearer of this.effectClearers) {
-            if (clearer) {
-                clearer();
+    private runState = (
+        state: StatesMapT[keyof StatesMapT],
+        control: Control<StatesMapT, MachineDataT, FinalStateT>,
+        args: any = undefined
+    ): any => {
+        this.hooksState.index = 0;
+        let updated: any;
+        try {
+            machineHooksStack.push(this.hooksState);
+            // @ts-ignore
+            updated = state(control, ...args);
+            machineHooksStack.pop();
+        } catch (e) {
+            this.reject(e);
+            throw e;
+        }
+        return updated;
+    };
+
+    transition = (nextStateName: keyof StatesMapT, ...args: any[]) => {
+        const control = new Control(this);
+
+        let isStateChange = nextStateName !== this.currentName;
+        this.currentArgs = args;
+
+        if (isStateChange) {
+            for (const { remove, dependencies } of this.hooksState.items) {
+                if (remove !== undefined) {
+                    remove();
+                    if (this.hooksState.useHistory && dependencies !== undefined) {
+                        // make sure the dependencies won't stop it in the next run
+                        dependencies.length = 0;
+                        dependencies.push({});
+                    }
+                }
+            }
+            if (this.hooksState.useHistory) {
+                this.histories.set(this.current.name, this.hooksState);
+            }
+            if (this.histories.has(nextStateName)) {
+                this.hooksState = this.histories.get(nextStateName)!;
+            } else {
+                this.hooksState = new MachineHooksState(() => {
+                    this.runState(this.states[nextStateName], control, ...args);
+                });
             }
         }
-        if (this.histories.has(NextState)) {
-            const history = this.histories.get(NextState);
-            this.current = history;
-        } else {
-            this.current = new NextState(this);
-        }
 
-        if (this.current.effects) {
-            // @ts-ignore
-            this.effectClearers = this.current.effects.map(effect => effect(this));
-        } else {
-            this.effectClearers = [];
-        }
+        const nextStateValue = this.runState(this.states[nextStateName], control, args);
 
-        // @ts-ignore
-        this.emit('transition', this);
-        if (this.parent) {
-            this.parent.receiveChildTransition(this);
-        }
-    }
+        if (control.isActive) {
+            this.current = nextStateValue;
+            this.currentName = nextStateName;
 
-    receiveChildTransition(machine: Machine<any, any>) {
-        // @ts-ignore
-        this.emit('child-transition', machine);
-        if (this.parent) {
-            this.parent.receiveChildTransition(machine);
+            if (isStateChange) {
+                this.emit('statechange', this.current);
+                this.emit('change', this.current);
+            }
+
+            if (nextStateValue instanceof Final) {
+                this.resolve(nextStateValue.value);
+            }
         }
-    }
+    };
+
+    private hooksState = new MachineHooksState(() => {
+        this.transition(this.currentName, ...this.currentArgs);
+    });
 }
