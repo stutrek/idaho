@@ -87,7 +87,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                         }
                     }
                     if (_this.hooksState.useHistory) {
-                        _this.histories.set(_this.current.name, _this.hooksState);
+                        _this.histories.set(_this.currentName, _this.hooksState);
                     }
                     if (_this.histories.has(nextStateName)) {
                         _this.hooksState = _this.histories.get(nextStateName);

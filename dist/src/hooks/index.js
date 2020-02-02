@@ -68,6 +68,7 @@ var __extends = (this && this.__extends) || (function () {
                     _this.remove();
                     _this.cleanup = effect();
                     _this.dependencies = dependencies;
+                    return;
                 }
                 for (var i = 0; i < dependencies.length; i++) {
                     if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
