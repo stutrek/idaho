@@ -23,13 +23,11 @@ var __extends = (this && this.__extends) || (function () {
     "use strict";
     exports.__esModule = true;
     var MachineHooksState = (function () {
-        function MachineHooksState(transition) {
-            var _this = this;
-            this.transition = transition;
+        function MachineHooksState(refreshMachine) {
+            this.refreshMachine = refreshMachine;
             this.items = [];
             this.index = 0;
             this.useHistory = false;
-            this.refreshMachine = function () { return _this.transition(); };
         }
         return MachineHooksState;
     }());
@@ -39,9 +37,9 @@ var __extends = (this && this.__extends) || (function () {
         }
         return Hook;
     }());
-    var StateHook = (function (_super) {
-        __extends(StateHook, _super);
-        function StateHook(refreshMachine, value) {
+    var StateDataHook = (function (_super) {
+        __extends(StateDataHook, _super);
+        function StateDataHook(refreshMachine, value) {
             var _this = _super.call(this) || this;
             _this.refreshMachine = refreshMachine;
             _this.value = value;
@@ -52,7 +50,7 @@ var __extends = (this && this.__extends) || (function () {
             _this.handleCall = function () { return [_this.value, _this.setValue]; };
             return _this;
         }
-        return StateHook;
+        return StateDataHook;
     }(Hook));
     var EffectHook = (function (_super) {
         __extends(EffectHook, _super);
@@ -114,14 +112,14 @@ var __extends = (this && this.__extends) || (function () {
         var machineHook = getCurrentHookState();
         machineHook.index += 1;
     };
-    exports.useState = function (defaultValue) {
+    exports.useStateData = function (defaultValue) {
         if (getCurrentHookState() === undefined) {
             throw new Error('There was no hook state, this indicates a problem in Idaho.');
         }
         var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
         incrementCurrentHook();
         if (items.length <= index) {
-            items[index] = new StateHook(refreshMachine, defaultValue);
+            items[index] = new StateDataHook(refreshMachine, defaultValue);
         }
         var hook = items[index];
         return hook.handleCall();

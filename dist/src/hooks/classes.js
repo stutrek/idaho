@@ -9,16 +9,9 @@
 })(function (require, exports) {
     "use strict";
     exports.__esModule = true;
-    var Guard = (function () {
-        function Guard(nextState) {
-            this.nextState = nextState;
-        }
-        return Guard;
-    }());
-    exports.Guard = Guard;
     var Final = (function () {
-        function Final(data) {
-            this.data = data;
+        function Final(value) {
+            this.value = value;
         }
         return Final;
     }());

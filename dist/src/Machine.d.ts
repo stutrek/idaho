@@ -1,24 +1,31 @@
-import { State, IState } from './State';
-interface Events<MachineT> {
-    transition: MachineT;
-    'child-transition': MachineT;
-    'data-change': MachineT;
+import { MachineHooksState } from './hooks';
+interface Events<StatesMapT, MachineDataT, FinalStateT> {
+    change: Machine<StatesMapT, MachineDataT, FinalStateT>;
+    statechange: Machine<StatesMapT, MachineDataT, FinalStateT>;
+    datachange: Machine<StatesMapT, MachineDataT, FinalStateT>;
 }
-export declare class Machine<StatesT extends State<Machine<StatesT, ParentT, MachineDataT>>, ParentT extends Machine<any> = undefined, MachineDataT = {}> {
-    State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>;
-    parent?: ParentT;
-    constructor(State?: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, parent?: ParentT);
-    initialState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>> | undefined;
-    histories: Map<IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>, StatesT>;
-    effectClearers: (() => void)[];
-    current: StatesT;
-    on: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(eventName: K, state: StatesT | MachineDataT) => void;
-    off: <K extends keyof Events<Machine<StatesT, ParentT, MachineDataT>>>(eventName: K, state: StatesT | MachineDataT) => void;
+export declare class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
+    states: StatesMapT;
+    data?: MachineDataT;
+    constructor(states: StatesMapT, initialState: keyof StatesMapT, data?: MachineDataT);
+    currentName: keyof StatesMapT;
+    current: any;
+    private currentArgs;
+    private isTransitioning;
+    histories: Map<keyof StatesMapT, MachineHooksState>;
+    then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
+    catch: (cb: (error: Error) => any) => void;
+    finally: () => void;
+    private resolve;
+    private reject;
+    private resolved;
+    private rejected;
+    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
+    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
     private emit;
-    data: MachineDataT | undefined;
-    private nextData;
     setData(newData: Partial<MachineDataT>): void;
-    transition(NextState: IState<StatesT, Machine<StatesT, ParentT, MachineDataT>>): void;
-    receiveChildTransition(machine: Machine<any, any>): void;
+    private runState;
+    transition: (nextStateName: keyof StatesMapT, ...args: any[]) => void;
+    private hooksState;
 }
 export {};
