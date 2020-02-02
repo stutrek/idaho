@@ -78,7 +78,7 @@ All events provide the machine as the only argument.
 
 -   `statechange` - when the state changes.
 -   `datachange` - when data changes.
--   `change` - when either state, data, or both change.
+-   `change` - when either state, data, or both change. This includes state data changes using `useStateData` and other hooks.
 
 ## States
 

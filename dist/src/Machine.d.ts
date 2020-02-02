@@ -20,14 +20,8 @@ export declare class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     private reject;
     private resolved;
     private rejected;
-    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
-        eventName: K,
-        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
-    ) => void;
-    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
-        eventName: K,
-        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
-    ) => void;
+    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
+    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(eventName: K, callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void) => void;
     private emit;
     setData(newData: Partial<MachineDataT>): void;
     private runState;

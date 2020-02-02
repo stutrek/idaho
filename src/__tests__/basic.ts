@@ -35,6 +35,7 @@ const on = (control: TestControl) => {
         switchToStateWithEffectAndHistory: () => control.transition('stateWithEffectAndHistory', 0),
         switchToStateWithEffectAndCleanup: () => control.transition('stateWithEffectAndCleanup', 0),
         switchToStateWithMemo: () => control.transition('stateWithMemo'),
+        switchToSameState: () => control.transition('on'),
     };
 };
 
@@ -300,6 +301,23 @@ describe('emitter', () => {
         expect(spy).toHaveBeenCalledWith(machine);
         expect(spy2).toHaveBeenCalledWith(machine);
     });
+
+    it('should be only call change when transitioning to the same state as before', () => {
+        const machine = makeMachine();
+        const spy = jest.fn();
+        const spy2 = jest.fn();
+        const spy3 = jest.fn();
+
+        machine.on('datachange', spy);
+        machine.on('statechange', spy2);
+        machine.on('change', spy3);
+
+        machine.state.switchToSameState();
+
+        expect(spy).toHaveBeenCalledTimes(0);
+        expect(spy2).toHaveBeenCalledTimes(0);
+        expect(spy3).toHaveBeenCalledWith(machine);
+    });
 });
 
 describe('hooks', () => {
@@ -391,5 +409,27 @@ describe('hooks', () => {
 
         machine.state.rerun();
         expect(original !== machine.state.memoized).toBe(true);
+    });
+
+    it('should call change handler when setState is called', () => {
+        const machine = makeMachine();
+
+        machine.state.switchToStateWithData();
+
+        const spy = jest.fn();
+        const spy2 = jest.fn();
+        const spy3 = jest.fn();
+
+        machine.on('datachange', spy);
+        machine.on('statechange', spy2);
+        machine.on('change', spy3);
+
+        machine.state.setValue(69);
+
+        expect(spy).toHaveBeenCalledTimes(0);
+        expect(spy2).toHaveBeenCalledTimes(0);
+        expect(spy3).toHaveBeenCalledWith(machine);
+
+        expect(machine.state.value).toBe(69); // heh
     });
 });

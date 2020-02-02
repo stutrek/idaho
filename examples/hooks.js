@@ -1,9 +1,17 @@
-import { useEffect, useState, HookMachine } from '../dist/index';
+const { useEffect, useStateData, Machine } = require('../dist/index');
 
-const Red = transition => {
+/*
+ 
+This example shows how to use Idaho to create a stoplight.
+
+Each state has a boolean for red, yellow, and green. Each state transitions to the next state after a timer.
+
+*/
+
+const Red = control => {
     useEffect(() => {
         const timeout = setTimeout(() => {
-            transition('green');
+            control.transition('green');
         }, 30000);
         return () => {
             clearTimeout(timeout);
@@ -16,10 +24,10 @@ const Red = transition => {
     };
 };
 
-const Yellow = transition => {
+const Yellow = control => {
     useEffect(() => {
         const timeout = setTimeout(() => {
-            transition('red');
+            control.transition('red');
         }, 3000);
         return () => {
             clearTimeout(timeout);
@@ -32,10 +40,10 @@ const Yellow = transition => {
     };
 };
 
-const Green = transition => {
+const Green = control => {
     useEffect(() => {
         const timeout = setTimeout(() => {
-            transition('yellow');
+            control.transition('yellow');
         }, 27000);
         return () => {
             clearTimeout(timeout);
@@ -48,7 +56,7 @@ const Green = transition => {
     };
 };
 
-const BlinkingRed = transition => {
+const BlinkingRed = control => {
     const [isOn, setIsOn] = useStateData(true);
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -72,12 +80,12 @@ const states = {
     blinkingRed: BlinkingRed,
 };
 
-const machine = new HookMachine(states, 'blinkingRed');
+const machine = new Machine(states, 'blinkingRed');
 
 setTimeout(() => {
     machine.transition('red');
 }, 20000);
 
-machine.on('change', status => {
-    console.log('change!', status);
+machine.on('change', machine => {
+    console.log('change!', machine.stateName, machine.state);
 });

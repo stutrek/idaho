@@ -95,6 +95,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                     else {
                         _this.hooksState = new hooks_1.MachineHooksState(function () {
                             _this.state = _this.runState(_this.states[nextStateName], control, args);
+                            _this.emit('change', _this);
                         });
                     }
                 }
@@ -110,9 +111,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                     if (dataChanged) {
                         _this.emit('datachange', _this);
                     }
-                    if (isStateChange || dataChanged) {
-                        _this.emit('change', _this);
-                    }
+                    _this.emit('change', _this);
                     if (nextStateValue instanceof classes_1.Final) {
                         _this.resolved = true;
                         _this.resolve(nextStateValue.value);

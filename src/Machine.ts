@@ -125,6 +125,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
             } else {
                 this.hooksState = new MachineHooksState(() => {
                     this.state = this.runState(this.states[nextStateName], control, args);
+                    this.emit('change', this);
                 });
             }
         }
@@ -145,9 +146,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
                 this.emit('datachange', this);
             }
 
-            if (isStateChange || dataChanged) {
-                this.emit('change', this);
-            }
+            this.emit('change', this);
 
             if (nextStateValue instanceof Final) {
                 this.resolved = true;
