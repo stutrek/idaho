@@ -1,4 +1,4 @@
-import { Machine, Control, Final } from '../../index';
+import { Machine, Control, Final, useStateData } from '../../index';
 
 interface OnOffStates {
     on: SwitchState;
@@ -6,6 +6,7 @@ interface OnOffStates {
     oopsie: SwitchState;
     done: SwitchState;
     dataSettingState: SwitchState;
+    stateWithData: SwitchState;
 }
 
 type OnOffControl = Control<OnOffStates, {}, {}>;
@@ -37,6 +38,7 @@ const on = (control: OnOffControl) => {
                 hey: 'there',
             });
         },
+        switchToStateWithData: () => control.transition('stateWithData'),
     };
 };
 
@@ -55,7 +57,15 @@ const dataSettingState = (control: OnOffControl) => {
     return {};
 };
 
-const onOffStates = { off, on, oopsie, done, dataSettingState };
+const stateWithData = (control: OnOffControl) => {
+    const [value, setValue] = useStateData(0);
+    return {
+        setValue,
+        value,
+    };
+};
+
+const onOffStates = { off, on, oopsie, done, dataSettingState, stateWithData };
 
 const makeMachine = () => new Machine(onOffStates, 'on', {});
 
@@ -176,5 +186,29 @@ describe('emitter', () => {
 
         expect(spy).toHaveBeenCalledWith(machine);
         expect(spy2).toHaveBeenCalledWith(machine);
+    });
+});
+
+describe('hooks', () => {
+    it('should store data on the current state', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithData();
+
+        expect(machine.current.value).toBe(0);
+
+        machine.current.setValue(69);
+        expect(machine.current.value).toBe(69); // heh
+    });
+
+    it('should store data on the current state', () => {
+        const machine = makeMachine();
+
+        machine.current.switchToStateWithData();
+
+        expect(machine.current.value).toBe(0);
+
+        machine.current.setValue(69);
+        expect(machine.current.value).toBe(69); // heh
     });
 });

@@ -87,7 +87,7 @@ const incrementCurrentHook = () => {
     machineHook.index += 1;
 };
 
-export const useState = <T>(defaultValue: T): [T, (newValue: T) => void] => {
+export const useStateData = <T>(defaultValue: T): [T, (newValue: T) => void] => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -98,7 +98,6 @@ export const useState = <T>(defaultValue: T): [T, (newValue: T) => void] => {
         items[index] = new StateDataHook(refreshMachine, defaultValue);
     }
     const hook = items[index] as StateDataHook<T>;
-
     return hook.handleCall();
 };
 

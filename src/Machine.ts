@@ -1,9 +1,7 @@
 import { EventEmitter } from 'events';
 import { machineHooksStack, MachineHooksState } from './hooks';
-import { Guard, Final } from './hooks/classes';
+import { Final } from './hooks/classes';
 import { Control } from './ControlObject';
-
-export { useState, useEffect, useMemo, useHistory } from './hooks';
 
 interface Events<StatesMapT, MachineDataT, FinalStateT> {
     change: Machine<StatesMapT, MachineDataT, FinalStateT>;
@@ -126,7 +124,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
                 this.hooksState = this.histories.get(nextStateName)!;
             } else {
                 this.hooksState = new MachineHooksState(() => {
-                    this.runState(this.states[nextStateName], control, ...args);
+                    this.current = this.runState(this.states[nextStateName], control, args);
                 });
             }
         }
