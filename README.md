@@ -10,7 +10,7 @@ The goal of this library is to make it easy to go from a state chart to code wit
 -   Machines have data that is persists through state transitions.
 -   Machines are event emitters.
 -   Machines are promises that resolve when the machine reaches a final state.
--   Machines have a single state, ParallelMachines have parallel states.
+    <!-- -   Machines have a single state, ParallelMachines have parallel states. -->
 
 For a great explanation of state charts, see [David K's talk at React Rally 2017](https://www.youtube.com/watch?v=VU1NKX6Qkxc). His library, XState, is great implemetation of SCXML and a very configurable state chart.
 
@@ -328,6 +328,7 @@ const cat = await loader;
 console.log(cat);
 ```
 
+<!--
 ### Parallel States
 
 ```javascript
@@ -348,7 +349,7 @@ const wordProcessor = new ParallelMachine({
 });
 
 wordProcessor.bold.state.turnOn();
-```
+``` -->
 
 ### History States
 
