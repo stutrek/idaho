@@ -9,7 +9,14 @@ type PropertyParameterTypes<T> = T[keyof T] extends (a: any) => any
 export class Control<StatesMapT, DataT, FinalStateT> {
     constructor(private machine: Machine<StatesMapT, DataT, FinalStateT>) {
         this.data = machine.data;
-        this.setData = machine.setData;
+        this.setData = (data: Partial<DataT>) => {
+            if (this.isActive === false) {
+                throw new Error(
+                    'Tried to transition from a state that Idaho has already exited. This is a noop, but could indicate a bug.'
+                );
+            }
+            machine.setData(data);
+        };
         this.previousState = machine.current;
         this.previousStateName = machine.currentName;
     }

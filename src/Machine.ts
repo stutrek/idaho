@@ -5,15 +5,10 @@ import { Control } from './ControlObject';
 
 export { useState, useEffect, useMemo, useHistory } from './hooks';
 
-interface Current<StatesMapT> {
-    name: keyof StatesMapT;
-    data: any;
-}
-
-interface Events<StatesMapT> {
-    change: Current<StatesMapT>;
-    statechange: Current<StatesMapT>;
-    datachange: Current<StatesMapT>;
+interface Events<StatesMapT, MachineDataT, FinalStateT> {
+    change: Machine<StatesMapT, MachineDataT, FinalStateT>;
+    statechange: Machine<StatesMapT, MachineDataT, FinalStateT>;
+    datachange: Machine<StatesMapT, MachineDataT, FinalStateT>;
 }
 
 export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
@@ -42,6 +37,8 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     current: any;
     private currentArgs: any[] = [];
 
+    private isTransitioning = false;
+
     histories = new Map<keyof StatesMapT, MachineHooksState>();
 
     then: (cb: (data: FinalStateT) => any, errorCb: (error: Error) => any) => void;
@@ -50,18 +47,20 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
 
     private resolve: (data: FinalStateT) => void = () => undefined;
     private reject: (data: FinalStateT) => void = () => undefined;
+    private resolved = false;
+    private rejected = false;
 
-    on: <K extends keyof Events<StatesMapT>>(
+    on: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
         eventName: K,
-        callback: (event: Current<StatesMapT>) => void
+        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
     ) => void;
-    off: <K extends keyof Events<StatesMapT>>(
+    off: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
         eventName: K,
-        callback: (event: Current<StatesMapT>) => void
+        callback: (event: Machine<StatesMapT, MachineDataT, FinalStateT>) => void
     ) => void;
-    private emit: <K extends keyof Events<StatesMapT>>(
+    private emit: <K extends keyof Events<StatesMapT, MachineDataT, FinalStateT>>(
         eventName: K,
-        event: Current<StatesMapT>
+        event: Machine<StatesMapT, MachineDataT, FinalStateT>
     ) => void;
 
     setData(newData: Partial<MachineDataT>) {
@@ -69,6 +68,10 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
             ...this.data,
             ...newData,
         };
+        if (this.isTransitioning === false) {
+            this.emit('datachange', this);
+            this.emit('change', this);
+        }
     }
 
     private runState = (
@@ -76,6 +79,9 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
         control: Control<StatesMapT, MachineDataT, FinalStateT>,
         args: any = undefined
     ): any => {
+        if (this.rejected || this.resolved) {
+            return;
+        }
         this.hooksState.index = 0;
         let updated: any;
         try {
@@ -84,6 +90,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
             updated = state(control, ...args);
             machineHooksStack.pop();
         } catch (e) {
+            this.rejected = true;
             this.reject(e);
             throw e;
         }
@@ -91,10 +98,15 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     };
 
     transition = (nextStateName: keyof StatesMapT, ...args: any[]) => {
-        const control = new Control(this);
-
+        if (this.rejected || this.resolved) {
+            return;
+        }
+        this.isTransitioning = true;
         let isStateChange = nextStateName !== this.currentName;
         this.currentArgs = args;
+        const currentData = this.data;
+
+        const control = new Control(this);
 
         if (isStateChange) {
             for (const { remove, dependencies } of this.hooksState.items) {
@@ -122,15 +134,25 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
         const nextStateValue = this.runState(this.states[nextStateName], control, args);
 
         if (control.isActive) {
+            this.isTransitioning = false;
             this.current = nextStateValue;
             this.currentName = nextStateName;
+            const dataChanged = this.data !== currentData;
 
             if (isStateChange) {
-                this.emit('statechange', this.current);
-                this.emit('change', this.current);
+                this.emit('statechange', this);
+            }
+
+            if (dataChanged) {
+                this.emit('datachange', this);
+            }
+
+            if (isStateChange || dataChanged) {
+                this.emit('change', this);
             }
 
             if (nextStateValue instanceof Final) {
+                this.resolved = true;
                 this.resolve(nextStateValue.value);
             }
         }
