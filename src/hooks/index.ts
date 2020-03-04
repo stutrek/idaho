@@ -132,7 +132,7 @@ export const useMemo = <T>(value: T, dependencies: any[]) => {
     return hook.handleCall(value, dependencies);
 };
 
-export const useHistory = (value: boolean) => {
+export const useHistory = (value: boolean = true) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }

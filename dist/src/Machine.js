@@ -1,4 +1,3 @@
-"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -17,11 +16,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-exports.__esModule = true;
-var events_1 = require("events");
-var hooks_1 = require("./hooks");
-var classes_1 = require("./hooks/classes");
-var ControlObject_1 = require("./ControlObject");
+import { EventEmitter } from 'events';
+import { machineHooksStack, MachineHooksState } from './hooks';
+import { Final } from './hooks/classes';
+import { Control } from './ControlObject';
 var Machine = (function () {
     function Machine(states, initialState, data) {
         var _this = this;
@@ -42,9 +40,9 @@ var Machine = (function () {
             _this.hooksState.index = 0;
             var updated;
             try {
-                hooks_1.machineHooksStack.push(_this.hooksState);
+                machineHooksStack.push(_this.hooksState);
                 updated = state.apply(void 0, __spreadArrays([control], args));
-                hooks_1.machineHooksStack.pop();
+                machineHooksStack.pop();
             }
             catch (e) {
                 _this.rejected = true;
@@ -65,7 +63,7 @@ var Machine = (function () {
             var isStateChange = nextStateName !== _this.stateName;
             _this.stateArgs = args;
             var stateData = _this.data;
-            var control = new ControlObject_1.Control(_this);
+            var control = new Control(_this, nextStateName);
             if (isStateChange) {
                 for (var _a = 0, _b = _this.hooksState.items; _a < _b.length; _a++) {
                     var _c = _b[_a], remove = _c.remove, dependencies = _c.dependencies;
@@ -84,7 +82,7 @@ var Machine = (function () {
                     _this.hooksState = _this.histories.get(nextStateName);
                 }
                 else {
-                    _this.hooksState = new hooks_1.MachineHooksState(function () {
+                    _this.hooksState = new MachineHooksState(function () {
                         _this.state = _this.runState(_this.states[nextStateName], control, args);
                         _this.emit('change', _this);
                     });
@@ -103,13 +101,13 @@ var Machine = (function () {
                     _this.emit('datachange', _this);
                 }
                 _this.emit('change', _this);
-                if (nextStateValue instanceof classes_1.Final) {
+                if (nextStateValue instanceof Final) {
                     _this.resolved = true;
                     _this.resolve(nextStateValue.value);
                 }
             }
         };
-        this.hooksState = new hooks_1.MachineHooksState(function () {
+        this.hooksState = new MachineHooksState(function () {
             _this.transition.apply(_this, __spreadArrays([_this.stateName], _this.stateArgs));
         });
         var internalPromise = new Promise(function (resolve, reject) {
@@ -119,7 +117,7 @@ var Machine = (function () {
         this.then = internalPromise.then.bind(internalPromise);
         this["catch"] = internalPromise["catch"].bind(internalPromise);
         this["finally"] = internalPromise["finally"].bind(internalPromise);
-        var emitter = new events_1.EventEmitter();
+        var emitter = new EventEmitter();
         this.on = emitter.on.bind(emitter);
         this.off = emitter.off.bind(emitter);
         this.emit = emitter.emit.bind(emitter);
@@ -134,5 +132,5 @@ var Machine = (function () {
     };
     return Machine;
 }());
-exports.Machine = Machine;
+export { Machine };
 //# sourceMappingURL=Machine.js.map

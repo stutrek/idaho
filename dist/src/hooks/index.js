@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12,7 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-exports.__esModule = true;
 var MachineHooksState = (function () {
     function MachineHooksState(refreshMachine) {
         this.refreshMachine = refreshMachine;
@@ -22,7 +20,7 @@ var MachineHooksState = (function () {
     }
     return MachineHooksState;
 }());
-exports.MachineHooksState = MachineHooksState;
+export { MachineHooksState };
 var Hook = (function () {
     function Hook() {
     }
@@ -98,13 +96,13 @@ var MemoHook = (function (_super) {
     }
     return MemoHook;
 }(Hook));
-exports.machineHooksStack = [];
-var getCurrentHookState = function () { return exports.machineHooksStack[exports.machineHooksStack.length - 1]; };
+export var machineHooksStack = [];
+var getCurrentHookState = function () { return machineHooksStack[machineHooksStack.length - 1]; };
 var incrementCurrentHook = function () {
     var machineHook = getCurrentHookState();
     machineHook.index += 1;
 };
-exports.useStateData = function (defaultValue) {
+export var useStateData = function (defaultValue) {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -116,7 +114,7 @@ exports.useStateData = function (defaultValue) {
     var hook = items[index];
     return hook.handleCall();
 };
-exports.useEffect = function (effect, dependencies) {
+export var useEffect = function (effect, dependencies) {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -130,7 +128,7 @@ exports.useEffect = function (effect, dependencies) {
         hook.handleCall(effect, dependencies);
     }
 };
-exports.useMemo = function (value, dependencies) {
+export var useMemo = function (value, dependencies) {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -142,7 +140,8 @@ exports.useMemo = function (value, dependencies) {
     var hook = items[index];
     return hook.handleCall(value, dependencies);
 };
-exports.useHistory = function (value) {
+export var useHistory = function (value) {
+    if (value === void 0) { value = true; }
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }

@@ -104,7 +104,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
         this.stateArgs = args;
         const stateData = this.data;
 
-        const control = new Control(this);
+        const control = new Control(this, nextStateName);
 
         if (isStateChange) {
             for (const { remove, dependencies } of this.hooksState.items) {

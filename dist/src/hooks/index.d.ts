@@ -14,5 +14,5 @@ export declare const machineHooksStack: MachineHooksState[];
 export declare const useStateData: <T>(defaultValue: T) => [T, (newValue: T) => void];
 export declare const useEffect: (effect: () => void | (() => void), dependencies: any[]) => void;
 export declare const useMemo: <T>(value: T, dependencies: any[]) => T;
-export declare const useHistory: (value: boolean) => void;
+export declare const useHistory: (value?: boolean) => void;
 export {};
