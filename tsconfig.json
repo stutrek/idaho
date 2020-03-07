@@ -11,5 +11,5 @@
         "lib": ["es6", "dom", "esnext"],
         "declaration": true
     },
-    "files": ["index.ts"]
+    "files": ["index.ts", "react.ts"]
 }
