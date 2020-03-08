@@ -17,6 +17,7 @@ class StateDataHook<T> extends Hook {
     }
     setValue = (newVal: T) => {
         this.value = newVal;
+        console.log('refreshing machine with', newVal);
         this.refreshMachine();
     };
     remove: undefined;
@@ -50,14 +51,18 @@ class EffectHook extends Hook {
     handleCall = (effect: () => void | (() => void), dependencies: any[]) => {
         if (this.dependencies.length !== dependencies.length) {
             this.remove();
-            this.cleanup = Promise.resolve().then(effect);
+            this.cleanup = new Promise(resolve => {
+                resolve(effect());
+            });
             this.dependencies = dependencies;
             return;
         }
         for (let i = 0; i < dependencies.length; i++) {
             if (Object.is(dependencies[i], this.dependencies[i]) === false) {
                 this.remove();
-                this.cleanup = Promise.resolve().then(effect);
+                this.cleanup = new Promise(resolve => {
+                    resolve(effect());
+                });
                 this.dependencies = dependencies;
                 break;
             }

@@ -34,6 +34,7 @@ var StateDataHook = (function (_super) {
         _this.value = value;
         _this.setValue = function (newVal) {
             _this.value = newVal;
+            console.log('refreshing machine with', newVal);
             _this.refreshMachine();
         };
         _this.handleCall = function () { return [_this.value, _this.setValue]; };
@@ -59,14 +60,18 @@ var EffectHook = (function (_super) {
         _this.handleCall = function (effect, dependencies) {
             if (_this.dependencies.length !== dependencies.length) {
                 _this.remove();
-                _this.cleanup = Promise.resolve().then(effect);
+                _this.cleanup = new Promise(function (resolve) {
+                    resolve(effect());
+                });
                 _this.dependencies = dependencies;
                 return;
             }
             for (var i = 0; i < dependencies.length; i++) {
                 if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
                     _this.remove();
-                    _this.cleanup = Promise.resolve().then(effect);
+                    _this.cleanup = new Promise(function (resolve) {
+                        resolve(effect());
+                    });
                     _this.dependencies = dependencies;
                     break;
                 }
