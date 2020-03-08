@@ -17,7 +17,6 @@ class StateDataHook<T> extends Hook {
     }
     setValue = (newVal: T) => {
         this.value = newVal;
-        console.log('refreshing machine with', newVal);
         this.refreshMachine();
     };
     remove: undefined;

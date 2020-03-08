@@ -34,7 +34,6 @@ var StateDataHook = (function (_super) {
         _this.value = value;
         _this.setValue = function (newVal) {
             _this.value = newVal;
-            console.log('refreshing machine with', newVal);
             _this.refreshMachine();
         };
         _this.handleCall = function () { return [_this.value, _this.setValue]; };
