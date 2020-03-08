@@ -48,27 +48,32 @@ var EffectHook = (function (_super) {
         _this.refreshMachine = refreshMachine;
         _this.dependencies = dependencies;
         _this.remove = function () {
-            if (typeof _this.cleanup === 'function') {
-                _this.cleanup();
+            if (typeof _this.cleanup !== undefined) {
+                _this.cleanup.then(function (cleanUpFnOrVoid) {
+                    if (typeof cleanUpFnOrVoid === 'function') {
+                        cleanUpFnOrVoid();
+                    }
+                });
             }
         };
         _this.handleCall = function (effect, dependencies) {
             if (_this.dependencies.length !== dependencies.length) {
                 _this.remove();
-                _this.cleanup = effect();
+                _this.cleanup = Promise.resolve().then(effect);
                 _this.dependencies = dependencies;
                 return;
             }
             for (var i = 0; i < dependencies.length; i++) {
                 if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
                     _this.remove();
-                    _this.cleanup = effect();
+                    _this.cleanup = Promise.resolve().then(effect);
                     _this.dependencies = dependencies;
                     break;
                 }
             }
         };
-        _this.cleanup = effect();
+        _this.dependencies = dependencies;
+        _this.cleanup = Promise.resolve().then(effect);
         return _this;
     }
     return EffectHook;
@@ -84,10 +89,12 @@ var MemoHook = (function (_super) {
             if (_this.dependencies.length !== dependencies.length) {
                 _this.value = value;
             }
-            for (var i = 0; i < dependencies.length; i++) {
-                if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
-                    _this.value = value;
-                    break;
+            else {
+                for (var i = 0; i < dependencies.length; i++) {
+                    if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
+                        _this.value = value;
+                        break;
+                    }
                 }
             }
             return _this.value;

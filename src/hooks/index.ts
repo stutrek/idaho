@@ -31,28 +31,33 @@ class EffectHook extends Hook {
         public dependencies: any[]
     ) {
         super();
-        this.cleanup = effect();
+        this.dependencies = dependencies;
+        this.cleanup = Promise.resolve().then(effect);
     }
 
-    private cleanup: void | (() => void);
+    private cleanup: Promise<void | (() => void)>;
 
     remove = () => {
-        if (typeof this.cleanup === 'function') {
-            this.cleanup();
+        if (typeof this.cleanup !== undefined) {
+            this.cleanup.then(cleanUpFnOrVoid => {
+                if (typeof cleanUpFnOrVoid === 'function') {
+                    cleanUpFnOrVoid();
+                }
+            });
         }
     };
 
     handleCall = (effect: () => void | (() => void), dependencies: any[]) => {
         if (this.dependencies.length !== dependencies.length) {
             this.remove();
-            this.cleanup = effect();
+            this.cleanup = Promise.resolve().then(effect);
             this.dependencies = dependencies;
             return;
         }
         for (let i = 0; i < dependencies.length; i++) {
             if (Object.is(dependencies[i], this.dependencies[i]) === false) {
                 this.remove();
-                this.cleanup = effect();
+                this.cleanup = Promise.resolve().then(effect);
                 this.dependencies = dependencies;
                 break;
             }
@@ -70,11 +75,12 @@ class MemoHook<T> extends Hook {
     handleCall = (value: T, dependencies: any[]): T => {
         if (this.dependencies.length !== dependencies.length) {
             this.value = value;
-        }
-        for (let i = 0; i < dependencies.length; i++) {
-            if (Object.is(dependencies[i], this.dependencies[i]) === false) {
-                this.value = value;
-                break;
+        } else {
+            for (let i = 0; i < dependencies.length; i++) {
+                if (Object.is(dependencies[i], this.dependencies[i]) === false) {
+                    this.value = value;
+                    break;
+                }
             }
         }
         return this.value;
