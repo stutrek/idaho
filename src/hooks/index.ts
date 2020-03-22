@@ -70,10 +70,15 @@ class EffectHook extends Hook {
 }
 
 class MemoHook<T> extends Hook {
-    constructor(private refreshMachine: () => void, private value: T, public dependencies: any[]) {
+    constructor(
+        private refreshMachine: () => void,
+        private callback: () => T,
+        public dependencies: any[]
+    ) {
         super();
+        this.value = callback();
     }
-
+    value: T;
     remove: undefined;
 
     handleCall = (cb: () => T, dependencies: any[]): T => {

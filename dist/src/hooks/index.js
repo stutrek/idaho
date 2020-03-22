@@ -84,10 +84,10 @@ var EffectHook = (function (_super) {
 }(Hook));
 var MemoHook = (function (_super) {
     __extends(MemoHook, _super);
-    function MemoHook(refreshMachine, value, dependencies) {
+    function MemoHook(refreshMachine, callback, dependencies) {
         var _this = _super.call(this) || this;
         _this.refreshMachine = refreshMachine;
-        _this.value = value;
+        _this.callback = callback;
         _this.dependencies = dependencies;
         _this.handleCall = function (cb, dependencies) {
             if (_this.dependencies.length !== dependencies.length) {
@@ -103,6 +103,7 @@ var MemoHook = (function (_super) {
             }
             return _this.value;
         };
+        _this.value = callback();
         return _this;
     }
     return MemoHook;
