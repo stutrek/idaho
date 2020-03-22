@@ -89,14 +89,14 @@ var MemoHook = (function (_super) {
         _this.refreshMachine = refreshMachine;
         _this.value = value;
         _this.dependencies = dependencies;
-        _this.handleCall = function (value, dependencies) {
+        _this.handleCall = function (cb, dependencies) {
             if (_this.dependencies.length !== dependencies.length) {
-                _this.value = value;
+                _this.value = cb();
             }
             else {
                 for (var i = 0; i < dependencies.length; i++) {
                     if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
-                        _this.value = value;
+                        _this.value = cb();
                         break;
                     }
                 }
@@ -139,17 +139,17 @@ export var useEffect = function (effect, dependencies) {
         hook.handleCall(effect, dependencies);
     }
 };
-export var useMemo = function (value, dependencies) {
+export var useMemo = function (callback, dependencies) {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
     var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
     incrementCurrentHook();
     if (items.length <= index) {
-        items[index] = new MemoHook(refreshMachine, value, dependencies);
+        items[index] = new MemoHook(refreshMachine, callback, dependencies);
     }
     var hook = items[index];
-    return hook.handleCall(value, dependencies);
+    return hook.handleCall(callback, dependencies);
 };
 export var useHistory = function (value) {
     if (value === void 0) { value = true; }

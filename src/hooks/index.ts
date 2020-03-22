@@ -76,13 +76,13 @@ class MemoHook<T> extends Hook {
 
     remove: undefined;
 
-    handleCall = (value: T, dependencies: any[]): T => {
+    handleCall = (cb: () => T, dependencies: any[]): T => {
         if (this.dependencies.length !== dependencies.length) {
-            this.value = value;
+            this.value = cb();
         } else {
             for (let i = 0; i < dependencies.length; i++) {
                 if (Object.is(dependencies[i], this.dependencies[i]) === false) {
-                    this.value = value;
+                    this.value = cb();
                     break;
                 }
             }
@@ -127,7 +127,7 @@ export const useEffect = (effect: () => void | (() => void), dependencies: any[]
     }
 };
 
-export const useMemo = <T>(value: T, dependencies: any[]) => {
+export const useMemo = <T>(callback: () => T, dependencies: any[]) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
@@ -135,11 +135,11 @@ export const useMemo = <T>(value: T, dependencies: any[]) => {
     const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
-        items[index] = new MemoHook(refreshMachine, value, dependencies);
+        items[index] = new MemoHook(refreshMachine, callback, dependencies);
     }
     const hook = items[index] as MemoHook<T>;
 
-    return hook.handleCall(value, dependencies);
+    return hook.handleCall(callback, dependencies);
 };
 
 export const useHistory = (value: boolean = true) => {

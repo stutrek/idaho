@@ -129,9 +129,9 @@ const stateWithEffectAndCleanup = (control: TestControl, arg: number) => {
 const stateWithMemo = (control: TestControl) => {
     const [data, setData] = useStateData(0);
     const memoized = useMemo(
-        {
+        () => ({
             data,
-        },
+        }),
         [data]
     );
 
