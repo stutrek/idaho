@@ -1,15 +1,19 @@
 import { MachineHooksState } from './hooks';
-interface Events<StatesMapT, MachineDataT, FinalStateT> {
+interface Events<StatesMapT extends StateMap, MachineDataT, FinalStateT> {
     change: Machine<StatesMapT, MachineDataT, FinalStateT>;
     statechange: Machine<StatesMapT, MachineDataT, FinalStateT>;
     datachange: Machine<StatesMapT, MachineDataT, FinalStateT>;
 }
-export declare class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
+declare type StateFunction = (controller: any) => any;
+export declare type StateMap = {
+    [index: string]: StateFunction;
+};
+export declare class Machine<StatesMapT extends StateMap, MachineDataT, FinalStateT = never> {
     states: StatesMapT;
     data?: MachineDataT;
     constructor(states: StatesMapT, initialState: keyof StatesMapT, data?: MachineDataT);
     stateName: keyof StatesMapT;
-    state: any;
+    state: ReturnType<StatesMapT[keyof StatesMapT]>;
     private stateArgs;
     private isTransitioning;
     histories: Map<keyof StatesMapT, MachineHooksState>;

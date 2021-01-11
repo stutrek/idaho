@@ -38,4 +38,23 @@ export function useMachineData(machine) {
     }, [machine]);
     return data;
 }
+export function useMachine(machine) {
+    var _a = useState({
+        stateName: machine.stateName,
+        state: machine.state
+    }), _b = _a[0], stateName = _b.stateName, state = _b.state, setStateName = _a[1];
+    useEffect(function () {
+        var listener = function () {
+            setStateName({
+                stateName: machine.stateName,
+                state: machine.state
+            });
+        };
+        machine.on('statechange', listener);
+        return function () {
+            machine.off('statechange', listener);
+        };
+    }, [machine]);
+    return [stateName, state];
+}
 //# sourceMappingURL=react.js.map

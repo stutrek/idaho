@@ -3,13 +3,18 @@ import { machineHooksStack, MachineHooksState } from './hooks';
 import { Final } from './hooks/classes';
 import { Control } from './ControlObject';
 
-interface Events<StatesMapT, MachineDataT, FinalStateT> {
+interface Events<StatesMapT extends StateMap, MachineDataT, FinalStateT> {
     change: Machine<StatesMapT, MachineDataT, FinalStateT>;
     statechange: Machine<StatesMapT, MachineDataT, FinalStateT>;
     datachange: Machine<StatesMapT, MachineDataT, FinalStateT>;
 }
 
-export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
+type StateFunction = (controller: any) => any;
+export type StateMap = {
+    [index: string]: StateFunction;
+};
+
+export class Machine<StatesMapT extends StateMap, MachineDataT, FinalStateT = never> {
     constructor(
         public states: StatesMapT,
         initialState: keyof StatesMapT,
@@ -32,7 +37,7 @@ export class Machine<StatesMapT, MachineDataT, FinalStateT = never> {
     }
 
     stateName: keyof StatesMapT;
-    state: any;
+    state: ReturnType<StatesMapT[keyof StatesMapT]>;
     private stateArgs: any[] = [];
 
     private isTransitioning = false;

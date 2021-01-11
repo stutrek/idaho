@@ -1,12 +1,6 @@
-import { Machine } from './Machine';
+import { Machine, StateMap } from './Machine';
 
-type PropertyReturnTypes<T> = T[keyof T] extends (a: any) => any ? ReturnType<T[keyof T]> : never;
-
-type PropertyParameterTypes<T> = T[keyof T] extends (a: any) => any
-    ? Parameters<T[keyof T]>
-    : never;
-
-export class Control<StatesMapT, DataT, FinalStateT> {
+export class Control<StatesMapT extends StateMap, DataT, FinalStateT> {
     constructor(
         private machine: Machine<StatesMapT, DataT, FinalStateT>,
         targetState: keyof StatesMapT
@@ -28,7 +22,7 @@ export class Control<StatesMapT, DataT, FinalStateT> {
     data: DataT;
     setData: (newData: Partial<DataT>) => void;
     stateName: keyof StatesMapT;
-    previousState: PropertyReturnTypes<StatesMapT>;
+    previousState: ReturnType<StatesMapT[keyof StatesMapT]>;
     previousStateName: keyof StatesMapT;
     isActive = true;
 

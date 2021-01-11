@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import { Machine } from './src/Machine';
+import { Machine, StateMap } from './src/Machine';
 
-export function useMachineStateName<StatesT, DataT, FinalT>(
+export function useMachineStateName<StatesT extends StateMap, DataT, FinalT>(
     machine: Machine<StatesT, DataT, FinalT>
 ) {
-    const [stateName, setStateName] = useState(machine.stateName);
+    const [stateName, setStateName] = useState<keyof StatesT>(machine.stateName);
 
     useEffect(() => {
         const listener = () => {
@@ -20,8 +20,10 @@ export function useMachineStateName<StatesT, DataT, FinalT>(
     return stateName;
 }
 
-export function useMachineState<StatesT, DataT, FinalT>(machine: Machine<StatesT, DataT, FinalT>) {
-    const [state, setStateValue] = useState(machine.state);
+export function useMachineState<StatesT extends StateMap, DataT, FinalT>(
+    machine: Machine<StatesT, DataT, FinalT>
+) {
+    const [state, setStateValue] = useState<ReturnType<StatesT[keyof StatesT]>>(machine.state);
 
     useEffect(() => {
         const listener = () => {
@@ -36,7 +38,7 @@ export function useMachineState<StatesT, DataT, FinalT>(machine: Machine<StatesT
     return state;
 }
 
-export function useMachineData<StatesT, DataT, FinalT>(
+export function useMachineData<StatesT extends StateMap, DataT, FinalT>(
     machine: Machine<StatesT, DataT, FinalT>
 ): DataT {
     const [data, setData] = useState<DataT>(machine.data);
@@ -52,4 +54,28 @@ export function useMachineData<StatesT, DataT, FinalT>(
     }, [machine]);
 
     return data;
+}
+
+export function useMachine<StatesT extends StateMap, DataT, FinalT>(
+    machine: Machine<StatesT, DataT, FinalT>
+) {
+    const [{ stateName, state }, setStateName] = useState({
+        stateName: machine.stateName,
+        state: machine.state,
+    });
+
+    useEffect(() => {
+        const listener = () => {
+            setStateName({
+                stateName: machine.stateName,
+                state: machine.state,
+            });
+        };
+        machine.on('statechange', listener);
+        return () => {
+            machine.off('statechange', listener);
+        };
+    }, [machine]);
+
+    return [stateName, state] as [typeof stateName, StatesT[typeof stateName]];
 }
