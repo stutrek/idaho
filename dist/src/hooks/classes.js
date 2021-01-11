@@ -1,8 +1,9 @@
-var Final = (function () {
-    function Final(value) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Final {
+    constructor(value) {
         this.value = value;
     }
-    return Final;
-}());
-export { Final };
+}
+exports.Final = Final;
 //# sourceMappingURL=classes.js.map

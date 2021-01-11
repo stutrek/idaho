@@ -1,60 +1,66 @@
-import { useState, useEffect } from 'react';
-export function useMachineStateName(machine) {
-    var _a = useState(machine.stateName), stateName = _a[0], setStateName = _a[1];
-    useEffect(function () {
-        var listener = function () {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = require("react");
+function useMachineStateName(machine) {
+    const [stateName, setStateName] = react_1.useState(machine.stateName);
+    react_1.useEffect(() => {
+        const listener = () => {
             setStateName(machine.stateName);
         };
         machine.on('statechange', listener);
-        return function () {
+        return () => {
             machine.off('statechange', listener);
         };
     }, [machine]);
     return stateName;
 }
-export function useMachineState(machine) {
-    var _a = useState(machine.state), state = _a[0], setStateValue = _a[1];
-    useEffect(function () {
-        var listener = function () {
+exports.useMachineStateName = useMachineStateName;
+function useMachineState(machine) {
+    const [state, setStateValue] = react_1.useState(machine.state);
+    react_1.useEffect(() => {
+        const listener = () => {
             setStateValue(machine.state);
         };
         machine.on('statechange', listener);
-        return function () {
+        return () => {
             machine.off('statechange', listener);
         };
     }, [machine]);
     return state;
 }
-export function useMachineData(machine) {
-    var _a = useState(machine.data), data = _a[0], setData = _a[1];
-    useEffect(function () {
-        var listener = function () {
+exports.useMachineState = useMachineState;
+function useMachineData(machine) {
+    const [data, setData] = react_1.useState(machine.data);
+    react_1.useEffect(() => {
+        const listener = () => {
             setData(machine.data);
         };
         machine.on('datachange', listener);
-        return function () {
+        return () => {
             machine.off('datachange', listener);
         };
     }, [machine]);
     return data;
 }
-export function useMachine(machine) {
-    var _a = useState({
+exports.useMachineData = useMachineData;
+function useMachine(machine) {
+    const [{ stateName, state }, setStateName] = react_1.useState({
         stateName: machine.stateName,
-        state: machine.state
-    }), _b = _a[0], stateName = _b.stateName, state = _b.state, setStateName = _a[1];
-    useEffect(function () {
-        var listener = function () {
+        state: machine.state,
+    });
+    react_1.useEffect(() => {
+        const listener = () => {
             setStateName({
                 stateName: machine.stateName,
-                state: machine.state
+                state: machine.state,
             });
         };
         machine.on('statechange', listener);
-        return function () {
+        return () => {
             machine.off('statechange', listener);
         };
     }, [machine]);
     return [stateName, state];
 }
+exports.useMachine = useMachine;
 //# sourceMappingURL=react.js.map

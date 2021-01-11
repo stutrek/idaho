@@ -1,163 +1,138 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var MachineHooksState = (function () {
-    function MachineHooksState(refreshMachine) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class MachineHooksState {
+    constructor(refreshMachine) {
         this.refreshMachine = refreshMachine;
         this.items = [];
         this.index = 0;
         this.useHistory = false;
     }
-    return MachineHooksState;
-}());
-export { MachineHooksState };
-var Hook = (function () {
-    function Hook() {
-    }
-    return Hook;
-}());
-var StateDataHook = (function (_super) {
-    __extends(StateDataHook, _super);
-    function StateDataHook(refreshMachine, value) {
-        var _this = _super.call(this) || this;
-        _this.refreshMachine = refreshMachine;
-        _this.value = value;
-        _this.setValue = function (newVal) {
-            _this.value = newVal;
-            _this.refreshMachine();
+}
+exports.MachineHooksState = MachineHooksState;
+class Hook {
+}
+class StateDataHook extends Hook {
+    constructor(refreshMachine, value) {
+        super();
+        this.refreshMachine = refreshMachine;
+        this.value = value;
+        this.setValue = (newVal) => {
+            this.value = newVal;
+            this.refreshMachine();
         };
-        _this.handleCall = function () { return [_this.value, _this.setValue]; };
-        return _this;
+        this.handleCall = () => [this.value, this.setValue];
     }
-    return StateDataHook;
-}(Hook));
-var EffectHook = (function (_super) {
-    __extends(EffectHook, _super);
-    function EffectHook(refreshMachine, effect, dependencies) {
-        var _this = _super.call(this) || this;
-        _this.refreshMachine = refreshMachine;
-        _this.dependencies = dependencies;
-        _this.remove = function () {
-            if (typeof _this.cleanup !== undefined) {
-                _this.cleanup.then(function (cleanUpFnOrVoid) {
+}
+class EffectHook extends Hook {
+    constructor(refreshMachine, effect, dependencies) {
+        super();
+        this.refreshMachine = refreshMachine;
+        this.dependencies = dependencies;
+        this.remove = () => {
+            if (typeof this.cleanup !== undefined) {
+                this.cleanup.then(cleanUpFnOrVoid => {
                     if (typeof cleanUpFnOrVoid === 'function') {
                         cleanUpFnOrVoid();
                     }
                 });
             }
         };
-        _this.handleCall = function (effect, dependencies) {
-            if (_this.dependencies.length !== dependencies.length) {
-                _this.remove();
-                _this.cleanup = new Promise(function (resolve) {
+        this.handleCall = (effect, dependencies) => {
+            if (this.dependencies.length !== dependencies.length) {
+                this.remove();
+                this.cleanup = new Promise(resolve => {
                     resolve(effect());
                 });
-                _this.dependencies = dependencies;
+                this.dependencies = dependencies;
                 return;
             }
-            for (var i = 0; i < dependencies.length; i++) {
-                if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
-                    _this.remove();
-                    _this.cleanup = new Promise(function (resolve) {
+            for (let i = 0; i < dependencies.length; i++) {
+                if (Object.is(dependencies[i], this.dependencies[i]) === false) {
+                    this.remove();
+                    this.cleanup = new Promise(resolve => {
                         resolve(effect());
                     });
-                    _this.dependencies = dependencies;
+                    this.dependencies = dependencies;
                     break;
                 }
             }
         };
-        _this.dependencies = dependencies;
-        _this.cleanup = Promise.resolve().then(effect);
-        return _this;
+        this.dependencies = dependencies;
+        this.cleanup = Promise.resolve().then(effect);
     }
-    return EffectHook;
-}(Hook));
-var MemoHook = (function (_super) {
-    __extends(MemoHook, _super);
-    function MemoHook(refreshMachine, callback, dependencies) {
-        var _this = _super.call(this) || this;
-        _this.refreshMachine = refreshMachine;
-        _this.callback = callback;
-        _this.dependencies = dependencies;
-        _this.handleCall = function (cb, dependencies) {
-            if (_this.dependencies.length !== dependencies.length) {
-                _this.value = cb();
+}
+class MemoHook extends Hook {
+    constructor(refreshMachine, callback, dependencies) {
+        super();
+        this.refreshMachine = refreshMachine;
+        this.callback = callback;
+        this.dependencies = dependencies;
+        this.handleCall = (cb, dependencies) => {
+            if (this.dependencies.length !== dependencies.length) {
+                this.value = cb();
             }
             else {
-                for (var i = 0; i < dependencies.length; i++) {
-                    if (Object.is(dependencies[i], _this.dependencies[i]) === false) {
-                        _this.value = cb();
+                for (let i = 0; i < dependencies.length; i++) {
+                    if (Object.is(dependencies[i], this.dependencies[i]) === false) {
+                        this.value = cb();
                         break;
                     }
                 }
             }
-            return _this.value;
+            return this.value;
         };
-        _this.value = callback();
-        return _this;
+        this.value = callback();
     }
-    return MemoHook;
-}(Hook));
-export var machineHooksStack = [];
-var getCurrentHookState = function () { return machineHooksStack[machineHooksStack.length - 1]; };
-var incrementCurrentHook = function () {
-    var machineHook = getCurrentHookState();
+}
+exports.machineHooksStack = [];
+const getCurrentHookState = () => exports.machineHooksStack[exports.machineHooksStack.length - 1];
+const incrementCurrentHook = () => {
+    const machineHook = getCurrentHookState();
     machineHook.index += 1;
 };
-export var useStateData = function (defaultValue) {
+exports.useStateData = (defaultValue) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
-    var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
+    const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
         items[index] = new StateDataHook(refreshMachine, defaultValue);
     }
-    var hook = items[index];
+    const hook = items[index];
     return hook.handleCall();
 };
-export var useEffect = function (effect, dependencies) {
+exports.useEffect = (effect, dependencies) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
-    var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
+    const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
         items[index] = new EffectHook(refreshMachine, effect, dependencies);
     }
     else {
-        var hook = items[index];
+        const hook = items[index];
         hook.handleCall(effect, dependencies);
     }
 };
-export var useMemo = function (callback, dependencies) {
+exports.useMemo = (callback, dependencies) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
-    var _a = getCurrentHookState(), items = _a.items, index = _a.index, refreshMachine = _a.refreshMachine;
+    const { items, index, refreshMachine } = getCurrentHookState();
     incrementCurrentHook();
     if (items.length <= index) {
         items[index] = new MemoHook(refreshMachine, callback, dependencies);
     }
-    var hook = items[index];
+    const hook = items[index];
     return hook.handleCall(callback, dependencies);
 };
-export var useHistory = function (value) {
-    if (value === void 0) { value = true; }
+exports.useHistory = (value = true) => {
     if (getCurrentHookState() === undefined) {
         throw new Error('There was no hook state, this indicates a problem in Idaho.');
     }
-    var currentHookState = getCurrentHookState();
+    const currentHookState = getCurrentHookState();
     currentHookState.useHistory = value;
 };
 //# sourceMappingURL=index.js.map
